@@ -25,11 +25,15 @@ if [ "$(echo $subnet | cut -c 1)" = "f" ]; then
 fi
 echo $subnet_cidr
 
-mv ./new-scan.txt ./last-scan.txt
+while true; do
+  mv ./new-scan.txt ./last-scan.txt
 
-nmap -sn $host_ip/$subnet_cidr | grep 'Nmap scan' > new-scan.txt
+  nmap -sn $host_ip/$subnet_cidr | grep 'Nmap scan' > new-scan.txt
 
-diff new-scan.txt last-scan.txt > delta.txt
+  diff new-scan.txt last-scan.txt > delta.txt
 
-grep '<' delta.txt > devices-added.txt
-grep '>' delta.txt > devices-removed.txt
+  grep '<' delta.txt > devices-added.txt
+  grep '>' delta.txt > devices-removed.txt
+  cat delta.txt | echo
+  sleep 60
+done

@@ -18,12 +18,16 @@
   ],
   "userInput": [
       {
+        "name": "TEST_VARIABLE",
+        "label": "Are variables required",
+        "type": "string",
+        "defaultValue": ""
       }
   ],
   "deployment": {
       "services": {
           "$SERVICE_NAME": {
-              "image": "${DOCKER_IMAGE_BASE}_$ARCH:$SERVICE_VERSION"
+              "image": "maxwellmcadam/${DOCKER_IMAGE_BASE}_$ARCH:$SERVICE_VERSION"
           }
       }
   }

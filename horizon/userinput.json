@@ -1,11 +1,11 @@
 {
 	"services": [
 		{
-			"org": "IBM",
+			"org": "Maxwell.McAdam@ibm.com",
 			"url": "network-observer",
 			"versionRange": "[0.0.0,INFINITY)",
 			"variables": {
-				
+					"TEST_VARIABLE": "test variable"
 			}
 		}
 	]
