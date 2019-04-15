@@ -22,6 +22,8 @@ if [ "$(echo $subnet | cut -c 1)" = "f" ]; then
       ;;
     esac
   done <<< "$subnet"
+else
+  subnet_cidr=24
 fi
 echo $subnet_cidr
 
