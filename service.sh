@@ -37,7 +37,7 @@ while true; do
     device_name = $(echo line | cut -d ' ' -f 5)
     device_ip = $(echo line | cut -d ' ' -f 6)
     current_time = date
-    if ($(echo line | cut -d ' ' -f 1) = '<')
+    if [$(echo line | cut -d ' ' -f 1) = '<']; then
       curl -X POST http://127.0.0.1:5984/devices_online -H "Content-Type: application/json" -d '{"device-name":"$device_name", "device-ip":"$device_ip", "time-discovered":"$current_time"}'
     fi
   done < delta.txt
