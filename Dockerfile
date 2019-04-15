@@ -7,4 +7,3 @@ RUN apt-get install -y curl
 
 COPY *.sh /
 WORKDIR /
-CMD /service-init.sh
