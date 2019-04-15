@@ -25,7 +25,6 @@ if [ "$(echo $subnet | cut -c 1)" = "f" ]; then
 else
   subnet_cidr=24
 fi
-echo $subnet_cidr
 
 while true; do
   mv ./new-scan.txt ./last-scan.txt
@@ -34,8 +33,15 @@ while true; do
 
   diff new-scan.txt last-scan.txt > delta.txt
 
+  while read line; do
+    device_name = $(echo line | cut -d ' ' -f 5)
+    device_ip = $(echo line | cut -d ' ' -f 6)
+    current_time = date
+    if ($(echo line | cut -d ' ' -f 1) = '<')
+      curl -X POST http://127.0.0.1:5984/devices_online -H "Content-Type: application/json" -d '{"device-name":"$device_name", "device-ip":"$device_ip", "time-discovered":"$current_time"}'
+    fi
+  done < delta.txt
   grep '<' delta.txt > devices-added.txt
   grep '>' delta.txt > devices-removed.txt
   cat delta.txt | echo
-  sleep 60
 done
