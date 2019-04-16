@@ -26,10 +26,10 @@ else
   subnet_cidr=24
 fi
 
-while true; do
+#while true; do
   mv ./new-scan.txt ./last-scan.txt
 
-  nmap -sn $host_ip/$subnet_cidr | grep 'Nmap scan' > new-scan.txt
+  nmap -sn -oX - $host_ip/$subnet_cidr | grep 'Nmap scan' > new-scan.txt
 
   diff new-scan.txt last-scan.txt > delta.txt
 
@@ -37,11 +37,12 @@ while true; do
     device_name = $(echo line | cut -d ' ' -f 5)
     device_ip = $(echo line | cut -d ' ' -f 6)
     current_time = date
-    if [$(echo line | cut -d ' ' -f 1) = '<']; then
-      curl -X POST http://127.0.0.1:5984/devices_online -H "Content-Type: application/json" -d '{"device-name":"$device_name", "device-ip":"$device_ip", "time-discovered":"$current_time"}'
+    if [$(echo $line | cut -d ' ' -f 1) = '<']; then
+      #curl -X POST http://127.0.0.1:5984/devices_online -H "Content-Type: application/json" -d '{"device-name":"$device_name", "device-ip":"$device_ip", "time-discovered":"$current_time"}'
+      echo '{"device-name":"$device_name", "device-ip":"$device_ip", "time-discovered":"$current_time"}'
     fi
   done < delta.txt
   grep '<' delta.txt > devices-added.txt
   grep '>' delta.txt > devices-removed.txt
   cat delta.txt | echo
-done
+#done
