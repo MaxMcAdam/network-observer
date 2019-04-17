@@ -119,12 +119,11 @@ func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url
   }
   jsonStr := map[string]LiveHost{"livehost":newHost}
   jsonValue, _ := json.Marshal(jsonStr)
-  fmt.Println(jsonValue)
   resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
   if err != nil {
     panic(err)
   }
-  fmt.Println(resp)
+  //fmt.Println(resp)
 }
 
 func queryAuthorizedUsers(host Host, url string) (bool, bool){
@@ -180,7 +179,7 @@ func updateCheckin(docRev string, docID string, url string, checkIn int){
   if err != nil{
     panic(err)
   }
-  fmt.Println(resp)
+  //fmt.Println(resp)
 }
 
 type LiveHost struct {
