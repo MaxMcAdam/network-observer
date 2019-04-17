@@ -82,15 +82,15 @@ func parseNmap() []Host{
 
 func findChanges(liveHosts []Host, dbURL string, checkIn int) {
   liveHostDBURL := dbURL + "live-hosts/"
-  authUserDBURL := dbURL + "auth-hosts/"
+  authHostDBURL := dbURL + "auth-hosts/"
   for _,host := range liveHosts {
-    exists := queryLiveHosts(host, authUserDBURL)
+    exists := queryLiveHosts(host, liveHostDBURL)
     if exists {
       fmt.Println("host aleady in live host db")
     } else {
       authorization, persistence := false, false
       if len(host.Hostnames) > 1{
-        authorization, persistence = queryAuthorizedUsers(host, authUserDBURL)
+        authorization, persistence = queryAuthorizedUsers(host, authHostDBURL)
       }
       if authorization {
         addHostToLiveHosts(host, true, persistence, liveHostDBURL, checkIn)
