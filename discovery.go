@@ -133,7 +133,7 @@ func queryAuthorizedUsers(host Host, url string) (bool, bool){
       Name: hostname.Name,
       Type: hostname.Type,
     }
-    jsonStr := map[string]Hostname{"hostname":searchHostname}
+    jsonStr := map[string]Hostname{"selector":searchHostname}
     jsonValue, _ := json.Marshal(jsonStr)
     resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
     if err != nil{
@@ -153,7 +153,7 @@ func queryLiveHosts(host Host, url string) bool{
       Addr: address.Addr,
       AddrType: address.AddrType,
     }
-    jsonStr := map[string]Address{"ip":searchAddress}
+    jsonStr := map[string]Address{"selector":searchAddress}
     jsonValue, _ := json.Marshal(jsonStr)
     resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
     fmt.Println(resp)
