@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE nmaprun>
 <?xml-stylesheet href="file:///usr/local/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
-<!-- Nmap 7.70 scan initiated Tue Apr 16 21:42:00 2019 as: nmap -sn -oX - 2606:a000:4807:a500:1455:5bf6:d477:1a86/64 -->
-<nmaprun scanner="nmap" args="nmap -sn -oX - 2606:a000:4807:a500:1455:5bf6:d477:1a86/64" start="1555465320" startstr="Tue Apr 16 21:42:00 2019" version="7.70" xmloutputversion="1.04">
+<!-- Nmap 7.70 scan initiated Wed Apr 17 09:52:57 2019 as: nmap -sn -oX - 9.27.96.203/23 -->
+<nmaprun scanner="nmap" args="nmap -sn -oX - 9.27.96.203/23" start="1555509177" startstr="Wed Apr 17 09:52:57 2019" version="7.70" xmloutputversion="1.04">
 <verbose level="0"/>
 <debugging level="0"/>
-<target specification="2606:a000:4807:a500:1455:5bf6:d477:1a86/64" status="skipped" reason="invalid"/>
-<runstats><finished time="1555465320" timestr="Tue Apr 16 21:42:00 2019" elapsed="0.01" summary="Nmap done at Tue Apr 16 21:42:00 2019; 0 IP addresses (0 hosts up) scanned in 0.01 seconds" exit="success"/><hosts up="0" down="0" total="0"/>
+<host><status state="up" reason="conn-refused" reason_ttl="0"/>
+<address addr="9.27.96.12" addrtype="ipv4"/>
+<hostnames>
+<hostname name="rockhopper.raleigh.ibm.com" type="PTR"/>
+</hostnames>
+<times srtt="97271" rttvar="75186" to="398015"/>
+</host>
+<host><status state="up" reason="conn-refused" reason_ttl="0"/>
+<address addr="9.27.96.44" addrtype="ipv4"/>
+<hostnames>
+<hostname name="ibm357-r90g8vml.raleigh.ibm.com" type="PTR"/>
+</hostnames>
+<times srtt="8251" rttvar="8251" to="100000"/>
+</host>
+<host><status state="up" reason="conn-refused" reason_ttl="0"/>
+<address addr="9.27.96.68" addrtype="ipv4"/>
+<hostnames>
+<hostname name="ibm558-r90k5rlj.raleigh.ibm.com" type="PTR"/>
+</hostnames>
+<times srtt="12182" rttvar="12182" to="100000"/>
+</host>
+<host><status state="up" reason="conn-refused" reason_ttl="0"/>
+<address addr="9.27.96.129" addrtype="ipv4"/>
+<hostnames>
+<hostname name="ibm241-r90k5rn4.raleigh.ibm.com" type="PTR"/>
+</hostnames>
+<times srtt="14863" rttvar="14863" to="100000"/>
+</host>
+<host><status state="up" reason="conn-refused" reason_ttl="0"/>
+<address addr="9.27.97.235" addrtype="ipv4"/>
+<hostnames>
+<hostname name="ibm452-r9dk937.raleigh.ibm.com" type="PTR"/>
+</hostnames>
+<times srtt="11143" rttvar="11143" to="100000"/>
+</host>
+<host><status state="up" reason="conn-refused" reason_ttl="0"/>
+<address addr="9.27.97.243" addrtype="ipv4"/>
+<hostnames>
+<hostname name="maaw541.raleigh.ibm.com" type="PTR"/>
+</hostnames>
+<times srtt="76225" rttvar="76225" to="381125"/>
+</host>
+<host><status state="up" reason="conn-refused" reason_ttl="0"/>
+<address addr="9.27.97.244" addrtype="ipv4"/>
+<hostnames>
+<hostname name="ibm893-r90k5r7g.raleigh.ibm.com" type="PTR"/>
+</hostnames>
+<times srtt="15936" rttvar="15936" to="100000"/>
+</host>
+<runstats><finished time="1555509192" timestr="Wed Apr 17 09:53:12 2019" elapsed="15.41" summary="Nmap done at Wed Apr 17 09:53:12 2019; 512 IP addresses (7 hosts up) scanned in 15.41 seconds" exit="success"/><hosts up="7" down="505" total="512"/>
 </runstats>
 </nmaprun>
