@@ -18,7 +18,7 @@ import (
 )
 
 func main() {
-  url := "http://127.0.0.1:5984/"
+  url := "http://127.0.0.1:5984/live-hosts/"
   addrs:=getNetwork()
   var wg sync.WaitGroup
   for _,address := range addrs {
@@ -82,11 +82,11 @@ func parseNmap() []Host{
 
 func findChanges(liveHosts []Host, dbURL string) {
   for _,host := range liveHosts {
-    queryLiveHosts(host, dbURL)
-    if(len(host.Hostnames) > 0){
-      fmt.Println(host.Hostnames[0].Name)
+    exists := queryLiveHosts(host, dbURL)
+    if exists {
+      fmt.Println(host.Addresses[0].Addr, " found")
     } else {
-      fmt.Println("no name")
+      fmt.Println(host.Addresses[0].Addr, " not found")
     }
   }
 }
