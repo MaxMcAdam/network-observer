@@ -19,15 +19,15 @@ import (
 
 func main() {
   url := "http://127.0.0.1:5984/live-hosts/"
-  addrs:=getNetwork()
-  var wg sync.WaitGroup
-  for _,address := range addrs {
-    wg.Add(1)
-    fmt.Println(address)
-    go discovery(&wg, address)
+  //addrs:=getNetwork()
+  //var wg sync.WaitGroup
+  //for _,address := range addrs {
+    //wg.Add(1)
+    //fmt.Println(address)
+    //go discovery(&wg, address)
     findChanges(parseNmap(), url)
-  }
-	wg.Wait()
+  //}
+	//wg.Wait()
 }
 
 func getNetwork() []string{
@@ -92,9 +92,14 @@ func findChanges(liveHosts []Host, dbURL string) {
 }
 
 func queryLiveHosts(host Host, url string) bool{
-  jsonStr := map[string]string{"addr":host.Addresses[0].Addr}
+  searchURL := url + "_find/"
+  searchAddress := Address{
+    Addr: host.Addresses[0].Addr,
+    AddrType: host.Addresses[0].AddrType,
+  }
+  jsonStr := map[string]Address{"addr":searchAddress}
   jsonValue, _ := json.Marshal(jsonStr)
-  resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
+  resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
   if err!=nil{
     return false
   }
