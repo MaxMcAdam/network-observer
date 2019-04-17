@@ -149,11 +149,16 @@ func queryAuthorizedUsers(host Host, url string) (bool, bool){
 func queryLiveHosts(host Host, url string) (bool, string, string){
   searchURL := url + "_find/"
   for _,address := range host.Addresses{
-    searchAddress := Address{
-      Addr: address.Addr,
-      AddrType: address.AddrType,
+    //searchAddress := Address{
+    //  Addr: address.Addr,
+    //  AddrType: address.AddrType,
+    //}
+    type addrSelector struct{
+      Addr string `json:"addr"`
     }
-    jsonStr := map[string]Address{"selector":searchAddress}
+    searchAddress := addrSelector{Addr: address.Addr,}
+    jsonStr := map[string]addrSelector{"selector":searchAddress}
+    fmt.Println("jsonStr for address selector ", jsonStr)
     jsonValue, _ := json.Marshal(jsonStr)
     resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
     fmt.Println(resp)
