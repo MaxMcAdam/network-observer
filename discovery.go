@@ -18,7 +18,7 @@ import (
 )
 
 func main() {
-  url := "http://127.0.0.1:5984/live-hosts/"
+  url := "http://127.0.0.1:5984/"
   //addrs:=getNetwork()
   //var wg sync.WaitGroup
   //for _,address := range addrs {
@@ -81,18 +81,20 @@ func parseNmap() []Host{
 }
 
 func findChanges(liveHosts []Host, dbURL string) {
+  liveHostDBURL := dbURL + "live-hosts/"
+  authUserDBURL := dbURL + "auth-hosts/"
   for _,host := range liveHosts {
     exists := queryLiveHosts(host, dbURL)
     if exists {
       fmt.Println("host aleady in live host db")
     } else {
       if len(host.Hostnames) > 1{
-        authorization, persistence := queryAuthorizedUsers(host, dbURL)
+        authorization, persistence := queryAuthorizedUsers(host, authUserDBURL)
         if authorization {
-          addHostToLiveHosts(host, true, persistence, dbURL)
+          addHostToLiveHosts(host, true, persistence, liveHostDBURL)
         } else {
           fmt.Println("Unauthorized host added")
-          addHostToLiveHosts(host, false, persistence, dbURL)
+          addHostToLiveHosts(host, false, persistence, liveHostDBURL)
         }
       }
       fmt.Println(host.Addresses[0].Addr, " not found")
