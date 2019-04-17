@@ -84,29 +84,91 @@ func findChanges(liveHosts []Host, dbURL string) {
   for _,host := range liveHosts {
     exists := queryLiveHosts(host, dbURL)
     if exists {
-      fmt.Println(host.Addresses[0].Addr, " found")
+      fmt.Println("host aleady in live host db")
     } else {
+      if len(host.Hostnames) > 1{
+        authorization, persistence := queryAuthorizedUsers(host, dbURL)
+        if authorization {
+          addHostToLiveHosts(host, true, persistence, dbURL)
+        } else {
+          fmt.Println("Unauthorized host added")
+          addHostToLiveHosts(host, false, persistence, dbURL)
+        }
+      }
       fmt.Println(host.Addresses[0].Addr, " not found")
     }
   }
 }
 
-func queryLiveHosts(host Host, url string) bool{
-  searchURL := url + "_find/"
-  searchAddress := Address{
-    Addr: host.Addresses[0].Addr,
-    AddrType: host.Addresses[0].AddrType,
+func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url string) {
+  var newHostname Hostname
+  if len(host.Hostnames) < 1 {
+    newHostname = host.Hostnames[0]
   }
-  jsonStr := map[string]Address{"addr":searchAddress}
+  newHost := LiveHost{
+    IPAddress: host.Addresses[0],
+    LiveHostname: newHostname,
+    Authorized: hostAuthorized,
+    Persistent: hostPersistent,
+    LastCheckin: 0,
+  }
+  jsonStr := map[string]LiveHost{"livehost":newHost}
   jsonValue, _ := json.Marshal(jsonStr)
-  resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
-  if err!=nil{
-    return false
+  resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
+  if err != nil {
+    panic(err)
   }
   fmt.Println(resp)
-  return true
 }
 
+func queryAuthorizedUsers(host Host, url string) (bool, bool){
+  searchURL := url + "_find/"
+  for _,hostname := range host.Hostnames{
+    searchHostname := Hostname{
+      Name: hostname.Name,
+      Type: hostname.Type,
+    }
+    jsonStr := map[string]Hostname{"hostname":searchHostname}
+    jsonValue, _ := json.Marshal(jsonStr)
+    resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
+    if err != nil{
+      panic(err)
+    }
+    if resp.StatusCode != 404 {
+      return true, false
+    }
+  }
+  return false, false
+}
+
+func queryLiveHosts(host Host, url string) bool{
+  searchURL := url + "_find/"
+  for _,address := range host.Addresses{
+    searchAddress := Address{
+      Addr: address.Addr,
+      AddrType: address.AddrType,
+    }
+    jsonStr := map[string]Address{"ip":searchAddress}
+    jsonValue, _ := json.Marshal(jsonStr)
+    resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
+    if err!=nil {
+      panic(err)
+    }
+    if resp.StatusCode != 404 {
+      return true
+    }
+  }
+
+  return false
+}
+
+type LiveHost struct {
+  IPAddress Address `json:"ipaddress"`
+  LiveHostname Hostname `json:"livehostname"`
+  Authorized bool `json:"authorized"`
+  Persistent bool `json:"persistent"`
+  LastCheckin int `json:"lastcheckin"`
+}
 
 type NmapRun struct {
   XMLName xml.Name `xml:"nmaprun" json:"nmaprun"`
