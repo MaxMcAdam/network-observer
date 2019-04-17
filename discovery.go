@@ -160,7 +160,10 @@ func queryLiveHosts(host Host, url string) bool{
     if err!=nil {
       panic(err)
     }
-    if resp.StatusCode != 404 {
+    defer resp.Body.Close()
+    var queryResp ExecStats
+    json.NewDecoder(resp.Body).Decode(&queryResp)
+    if queryResp.ResultsReturned > 0 {
       return true
     }
   }
@@ -175,6 +178,18 @@ type LiveHost struct {
   Persistent bool `json:"persistent"`
   LastCheckin int `json:"lastcheckin"`
   TimeDiscovered string `json:"timediscovered"`
+}
+
+type FindResponseBody struct {
+  ExecutionStats ExecStats `json:"execution_stats"`
+}
+
+type ExecStats struct {
+  TotalKeysExamined int `json:"total_keys_examined"`
+  TotalDocsExamined int `json:"total_docs_examined"`
+  TotalQuorumDocsExamined int `json:"total_quorum_docs_examined"`
+  ResultsReturned int `json:"results_returned"`
+  ExecutionTimeMS float32 `json:"execution_time_ms"`
 }
 
 type NmapRun struct {
