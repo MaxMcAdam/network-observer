@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/local/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.70 scan initiated Tue Apr 16 21:42:00 2019 as: nmap -sn -oX - 2606:a000:4807:a500:1455:5bf6:d477:1a86/64 -->
+<nmaprun scanner="nmap" args="nmap -sn -oX - 2606:a000:4807:a500:1455:5bf6:d477:1a86/64" start="1555465320" startstr="Tue Apr 16 21:42:00 2019" version="7.70" xmloutputversion="1.04">
+<verbose level="0"/>
+<debugging level="0"/>
+<target specification="2606:a000:4807:a500:1455:5bf6:d477:1a86/64" status="skipped" reason="invalid"/>
+<runstats><finished time="1555465320" timestr="Tue Apr 16 21:42:00 2019" elapsed="0.01" summary="Nmap done at Tue Apr 16 21:42:00 2019; 0 IP addresses (0 hosts up) scanned in 0.01 seconds" exit="success"/><hosts up="0" down="0" total="0"/>
+</runstats>
+</nmaprun>
