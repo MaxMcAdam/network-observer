@@ -15,19 +15,19 @@ import (
   "io/ioutil"
   "net/http"
   "encoding/json"
+  "time"
 )
 
 func main() {
+  checkIn := 0
   url := "http://127.0.0.1:5984/"
   //addrs:=getNetwork()
   //var wg sync.WaitGroup
-  //for _,address := range addrs {
-    //wg.Add(1)
-    //fmt.Println(address)
-    //go discovery(&wg, address)
-    findChanges(parseNmap(), url)
-  //}
-	//wg.Wait()
+  for true {
+    findChanges(parseNmap(), url, checkIn)
+    checkIn++
+    time.Sleep(time.Minute)
+  }
 }
 
 func getNetwork() []string{
@@ -80,11 +80,11 @@ func parseNmap() []Host{
   return scan.Hosts
 }
 
-func findChanges(liveHosts []Host, dbURL string) {
+func findChanges(liveHosts []Host, dbURL string, checkIn int) {
   liveHostDBURL := dbURL + "live-hosts/"
   authUserDBURL := dbURL + "auth-hosts/"
   for _,host := range liveHosts {
-    exists := queryLiveHosts(host, dbURL)
+    exists := queryLiveHosts(host, authUserDBURL)
     if exists {
       fmt.Println("host aleady in live host db")
     } else {
@@ -93,29 +93,32 @@ func findChanges(liveHosts []Host, dbURL string) {
         authorization, persistence = queryAuthorizedUsers(host, authUserDBURL)
       }
       if authorization {
-        addHostToLiveHosts(host, true, persistence, liveHostDBURL)
+        addHostToLiveHosts(host, true, persistence, liveHostDBURL, checkIn)
       } else {
         fmt.Println("Unauthorized host added")
-        addHostToLiveHosts(host, false, persistence, liveHostDBURL)
+        addHostToLiveHosts(host, false, persistence, liveHostDBURL, checkIn)
       }
     }
   }
 }
 
-func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url string) {
+func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url string, checkIn int) {
   var newHostname Hostname
   if len(host.Hostnames) < 1 {
     newHostname = host.Hostnames[0]
   }
+  currentTime := time.Now().String()
   newHost := LiveHost{
     IPAddress: host.Addresses[0],
     LiveHostname: newHostname,
     Authorized: hostAuthorized,
     Persistent: hostPersistent,
-    LastCheckin: 0,
+    LastCheckin: checkIn,
+    TimeDiscovered: currentTime,
   }
   jsonStr := map[string]LiveHost{"livehost":newHost}
   jsonValue, _ := json.Marshal(jsonStr)
+  fmt.Println(jsonValue)
   resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
   if err != nil {
     panic(err)
@@ -153,6 +156,7 @@ func queryLiveHosts(host Host, url string) bool{
     jsonStr := map[string]Address{"ip":searchAddress}
     jsonValue, _ := json.Marshal(jsonStr)
     resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
+    fmt.Println(resp)
     if err!=nil {
       panic(err)
     }
@@ -170,6 +174,7 @@ type LiveHost struct {
   Authorized bool `json:"authorized"`
   Persistent bool `json:"persistent"`
   LastCheckin int `json:"lastcheckin"`
+  TimeDiscovered string `json:"timediscovered"`
 }
 
 type NmapRun struct {
