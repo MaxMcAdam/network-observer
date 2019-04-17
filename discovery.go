@@ -119,7 +119,7 @@ func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url
   }
   jsonStr := map[string]LiveHost{"livehost":newHost}
   jsonValue, _ := json.Marshal(jsonStr)
-  resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
+  _, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
   if err != nil {
     panic(err)
   }
@@ -175,7 +175,7 @@ func updateCheckin(docRev string, docID string, url string, checkIn int){
   url = url + docID + "/"
   jsonStr := map[string]interface{}{"lastcheckin":checkIn,"_rev":docRev}
   jsonValue, _ := json.Marshal(jsonStr)
-  resp, err := http.NewRequest(http.MethodPut,url, bytes.NewBuffer(jsonValue))
+  _, err := http.NewRequest(http.MethodPut,url, bytes.NewBuffer(jsonValue))
   if err != nil{
     panic(err)
   }
