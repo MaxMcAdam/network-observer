@@ -84,9 +84,10 @@ func findChanges(liveHosts []Host, dbURL string, checkIn int) {
   liveHostDBURL := dbURL + "live-hosts/"
   authHostDBURL := dbURL + "auth-hosts/"
   for _,host := range liveHosts {
-    exists := queryLiveHosts(host, liveHostDBURL)
+    exists, docRev, docID := queryLiveHosts(host, liveHostDBURL)
     if exists {
       fmt.Println("host aleady in live host db")
+      updateCheckin(docRev, docID, dbURL, checkIn)
     } else {
       authorization, persistence := false, false
       if len(host.Hostnames) > 1{
@@ -146,7 +147,7 @@ func queryAuthorizedUsers(host Host, url string) (bool, bool){
   return false, false
 }
 
-func queryLiveHosts(host Host, url string) bool{
+func queryLiveHosts(host Host, url string) (bool, string, string){
   searchURL := url + "_find/"
   for _,address := range host.Addresses{
     searchAddress := Address{
@@ -161,14 +162,25 @@ func queryLiveHosts(host Host, url string) bool{
       panic(err)
     }
     defer resp.Body.Close()
-    var queryResp ExecStats
+    var queryResp FindResponseBody
     json.NewDecoder(resp.Body).Decode(&queryResp)
-    if queryResp.ResultsReturned > 0 {
-      return true
+    if queryResp.ExecutionStats.ResultsReturned > 0 {
+      return true, queryResp.Docs[0].Rev, queryResp.Docs[0].ID
     }
   }
 
-  return false
+  return false, "", ""
+}
+
+func updateCheckin(docRev string, docID string, url string, checkIn int){
+  url = url + docID + "/"
+  jsonStr := map[string]interface{}{"lastcheckin":checkIn,"_rev":docRev}
+  jsonValue, _ := json.Marshal(jsonStr)
+  resp, err := http.NewRequest(http.MethodPut,url, bytes.NewBuffer(jsonValue))
+  if err != nil{
+    panic(err)
+  }
+  fmt.Println(resp)
 }
 
 type LiveHost struct {
@@ -178,9 +190,12 @@ type LiveHost struct {
   Persistent bool `json:"persistent"`
   LastCheckin int `json:"lastcheckin"`
   TimeDiscovered string `json:"timediscovered"`
+  Rev string `json:"_rev"`
+  ID string `json:"_id"`
 }
 
 type FindResponseBody struct {
+  Docs []LiveHost `json:"docs"`
   ExecutionStats ExecStats `json:"execution_stats"`
 }
 
