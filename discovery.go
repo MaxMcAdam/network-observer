@@ -183,13 +183,8 @@ func queryLiveHosts(host Host, url string, checkIn int) bool{
 func updateCheckin(docToRev Doc, checkIn int, url string){
   url = url + docToRev.ID + "/"
   docToRev.Host.LastCheckin = checkIn
-  type RevCheckin struct {
-    RevID string `json:"_rev"`
-    DocID string `json:"_id"`
-    NewCheckin int `json:"livehost.lastcheckin"`
-  }
-  jsonRev := RevCheckin{DocID:docToRev.ID,RevID:docToRev.Rev,NewCheckin:checkIn,}
-  jsonValue, _ := json.Marshal(jsonRev)
+  jsonValue, _ := json.Marshal(docToRev)
+  fmt.Println(jsonValue)
   _, err := http.NewRequest(http.MethodPut,url, bytes.NewBuffer(jsonValue))
   if err != nil{
     panic(err)
