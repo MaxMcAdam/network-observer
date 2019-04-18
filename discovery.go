@@ -213,10 +213,17 @@ func updateCheckin(docToRev Doc, checkIn int, url string) {
 	var printable Doc
 	_ = json.Unmarshal(jsonValue, &printable)
 	fmt.Println(printable)
-	_, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(jsonValue))
+	resp, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(jsonValue))
 	if err != nil {
 		panic(err)
 	}
+
+	defer resp.Body.Close()
+	fmt.Println("http PUT Response Header: ", resp.Header)
+	body, _ := ioutil.ReadAll(resp.Body)
+	var queryResp FindResponseBody
+	fmt.Println("http PUT Response Body: ", queryResp)
+	json.Unmarshal(body, &queryResp)
 }
 
 type LiveHost struct {
