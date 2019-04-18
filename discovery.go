@@ -49,7 +49,6 @@ func getNetwork() []string {
 }
 
 func discovery(wg *sync.WaitGroup, ipAddr string) {
-	fmt.Println("start goroutine")
 	cmdFunction := "./service.sh"
 	cmdArgs := ipAddr
 	cmd := exec.Command(cmdFunction, cmdArgs)
@@ -60,10 +59,6 @@ func discovery(wg *sync.WaitGroup, ipAddr string) {
 		panic(err)
 	}
 	scanner := bufio.NewScanner(networkChanges)
-	for scanner.Scan() {
-		fmt.Println(scanner.Text())
-	}
-	fmt.Println("end goroutine")
 	wg.Done()
 }
 
@@ -87,7 +82,6 @@ func findChanges(liveHosts []Host, dbURL string, checkIn int) {
 	liveHostDBURL := dbURL + "live-hosts/"
 	authHostDBURL := dbURL + "auth-hosts/"
 	for _, host := range liveHosts {
-		fmt.Println(host)
 		exists := queryLiveHosts(host, liveHostDBURL, checkIn)
 		if exists {
 			fmt.Println("host aleady in live host db")
@@ -144,7 +138,6 @@ func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url
 	if err != nil {
 		panic(err)
 	}
-	//fmt.Println(resp)
 }
 
 func queryAuthorizedUsers(host Host, url string) (bool, bool) {
@@ -161,7 +154,6 @@ func queryAuthorizedUsers(host Host, url string) (bool, bool) {
 		}{Name: hostname.Name}}
 		jsonValue, _ := json.Marshal(jsonStr)
 		resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
-		fmt.Println(string(jsonValue))
 		if err != nil {
 			panic(err)
 		}
@@ -169,11 +161,9 @@ func queryAuthorizedUsers(host Host, url string) (bool, bool) {
 		body, _ := ioutil.ReadAll(resp.Body)
 		var queryResp FindResponseBody
 		err = json.Unmarshal(body, &queryResp)
-		//fmt.Println(string(queryResp))
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(queryResp)
 
 		if len(queryResp.Docs) > 0 {
 			return true, queryResp.Docs[0].Host.Persistent
@@ -196,7 +186,6 @@ func queryLiveHosts(host Host, url string, checkIn int) bool {
 		}{Addr: address.Addr}}
 		jsonValue, _ := json.Marshal(jsonStr)
 		resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
-		fmt.Println(string(jsonValue))
 		if err != nil {
 			panic(err)
 		}
@@ -204,11 +193,9 @@ func queryLiveHosts(host Host, url string, checkIn int) bool {
 		body, _ := ioutil.ReadAll(resp.Body)
 		var queryResp FindResponseBody
 		err = json.Unmarshal(body, &queryResp)
-		//fmt.Println(string(queryResp))
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(queryResp)
 
 		if len(queryResp.Docs) > 0 {
 			updateCheckin(queryResp.Docs[0], checkIn, url)
@@ -230,7 +217,6 @@ func updateCheckin(docToRev Doc, checkIn int, url string) {
 	if err != nil {
 		panic(err)
 	}
-	//fmt.Println(resp)
 }
 
 type LiveHost struct {
