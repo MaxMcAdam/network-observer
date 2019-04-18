@@ -163,9 +163,14 @@ func queryLiveHosts(host Host, url string) (bool, string, string){
       panic(err)
     }
     defer resp.Body.Close()
+    body, _ := ioutil.ReadAll(resp.Body)
     var queryResp FindResponseBody
-    json.NewDecoder(resp.Body).Decode(&queryResp)
+    err = json.Unmarshal(body, &queryResp)
     //fmt.Println(string(queryResp))
+    if err!=nil {
+      panic(err)
+    }
+    fmt.Println(queryResp)
     if len(queryResp.Docs) > 0 {
       return true, queryResp.Docs[0].Rev, queryResp.Docs[0].ID
     }
