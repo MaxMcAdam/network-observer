@@ -184,7 +184,9 @@ func updateCheckin(docToRev Doc, checkIn int, url string){
   url = url + docToRev.ID + "/"
   docToRev.Host.LastCheckin = checkIn
   jsonValue, _ := json.Marshal(docToRev)
-  fmt.Println(jsonValue)
+  var printable Doc
+  _=json.Unmarshal(jsonValue, &printable)
+  fmt.Println(printable)
   _, err := http.NewRequest(http.MethodPut,url, bytes.NewBuffer(jsonValue))
   if err != nil{
     panic(err)
