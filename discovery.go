@@ -90,6 +90,7 @@ func findChanges(liveHosts []Host, dbURL string, checkIn int) {
     } else {
       authorization, persistence := false, false
       if len(host.Hostnames) > 1{
+        fmt.Println("Hostname found")
         authorization, persistence = queryAuthorizedUsers(host, authHostDBURL)
       }
       if authorization {
@@ -233,10 +234,11 @@ type Host struct {
   XMLName xml.Name `xml:"host" json:"host"`
   Status []Status `xml:"status" json:"status"`
   Addresses []Address `xml:"address" json:"address"`
-  Hostnames []Hostname `xml:"hostnames>hostname" json:"hostnames"`
+  Hostnames []Hostname `xml:"hostnames" json:"hostnames"`
 }
 
 type Hostname struct {
+  XMLName xml.Name `xml:"hostname" json:"hostname"`
   Name string `xml:"name,attr" json:"name"`
   Type string `xml:"type,attr" json:"type"`
 }
