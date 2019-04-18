@@ -159,7 +159,7 @@ func queryLiveHosts(host Host, url string) (bool, string, string){
     fmt.Println("jsonStr for address selector ", jsonStr)
     jsonValue, _ := json.Marshal(jsonStr)
     resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
-    fmt.Println(json.MarshalIndent(jsonValue, "","  "))
+    fmt.Println(string(jsonValue))
     fmt.Println(resp)
     if err!=nil {
       panic(err)
