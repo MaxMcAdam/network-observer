@@ -196,7 +196,7 @@ func updateCheckin(docToRev Doc, checkIn int, url string){
 
 type LiveHost struct {
   IPAddress Address `json:"ipaddress"`
-  LiveHostname Hostname `json:"livehostname"`
+  LiveHostname Hostname `json:"hostname"`
   Authorized bool `json:"authorized"`
   Persistent bool `json:"persistent"`
   LastCheckin int `json:"lastcheckin"`
