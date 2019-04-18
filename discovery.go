@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bufio"
+	_ "bufio"
 	"bytes"
 	"encoding/json"
 	_ "encoding/json"
@@ -52,13 +52,13 @@ func discovery(wg *sync.WaitGroup, ipAddr string) {
 	cmdFunction := "./service.sh"
 	cmdArgs := ipAddr
 	cmd := exec.Command(cmdFunction, cmdArgs)
-	networkChanges, err := cmd.StdoutPipe()
+	_, err := cmd.StdoutPipe()
 	cmd.Start()
 	if err != nil {
 		fmt.Println("Error creating the standard output pipe")
 		panic(err)
 	}
-	scanner := bufio.NewScanner(networkChanges)
+	//scanner := bufio.NewScanner(networkChanges)
 	wg.Done()
 }
 
@@ -207,23 +207,30 @@ func queryLiveHosts(host Host, url string, checkIn int) bool {
 }
 
 func updateCheckin(docToRev Doc, checkIn int, url string) {
-	url = url + docToRev.ID + "/"
+	updateURL := url + docToRev.ID + "/"
 	docToRev.Host.LastCheckin = checkIn
 	jsonValue, _ := json.Marshal(docToRev)
 	var printable Doc
 	_ = json.Unmarshal(jsonValue, &printable)
-	fmt.Println(printable)
-	resp, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(jsonValue))
-	if err != nil {
-		panic(err)
-	}
 
-	defer resp.Body.Close()
-	fmt.Println("http PUT Response Header: ", resp.Header)
-	body, _ := ioutil.ReadAll(resp.Body)
-	var queryResp FindResponseBody
-	fmt.Println("http PUT Response Body: ", queryResp)
-	json.Unmarshal(body, &queryResp)
+	cmdFunction := "curl"
+	//cmdArgs := []string{"curl", "-X PUT", updateURL, "-d", "'", string(jsonValue), "'"}
+	cmd := exec.Command(cmdFunction, "curl", "-X PUT", updateURL, "-d", "'", string(jsonValue), "'")
+
+	cmd.Start()
+
+	//fmt.Println(printable)
+	//resp, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(jsonValue))
+	//if err != nil {
+	//	panic(err)
+	//}
+
+	//defer resp.Body.Close()
+	//fmt.Println("http PUT Response Header: ", resp.Header)
+	//body, _ := ioutil.ReadAll(resp.Body)
+	//var queryResp FindResponseBody
+	//fmt.Println("http PUT Response Body: ", queryResp)
+	//json.Unmarshal(body, &queryResp)
 }
 
 type LiveHost struct {
