@@ -235,7 +235,7 @@ type Host struct {
   XMLName xml.Name `xml:"host" json:"host"`
   Status []Status `xml:"status" json:"status"`
   Addresses []Address `xml:"address" json:"address"`
-  Hostnames []Hostname `xml:"hostnames" json:"hostnames"`
+  Hostnames []Hostname `xml:"hostnames>hostname" json:"hostnames"`
 }
 
 type Hostname struct {
