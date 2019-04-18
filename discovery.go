@@ -163,11 +163,11 @@ func queryLiveHosts(host Host, url string) (bool, string, string){
       panic(err)
     }
     defer resp.Body.Close()
-    var queryResp []LiveHost
+    var queryResp FindResponseBody
     json.NewDecoder(resp.Body).Decode(&queryResp)
     //fmt.Println(string(queryResp))
-    if len(queryResp) > 0 {
-      return true, queryResp[0].Rev, queryResp[0].ID
+    if len(queryResp.Docs) > 0 {
+      return true, queryResp.Docs[0].Rev, queryResp.Docs[0].ID
     }
   }
 
@@ -198,6 +198,8 @@ type LiveHost struct {
 
 type FindResponseBody struct {
   Docs []LiveHost `json:"docs"`
+  Bookmark string `json:"bookmark"`
+  Warning string `json:"warning"`
   //ExecutionStats ExecStats `json:"execution_stats"`
 }
 
