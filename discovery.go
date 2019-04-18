@@ -156,17 +156,16 @@ func queryLiveHosts(host Host, url string) (bool, string, string){
     }
 
     jsonStr := AddrSelector{Selector: struct{Addr string `json:"livehost.ipaddress.addr"`}{Addr:address.Addr,},}
-    fmt.Println("jsonStr for address selector ", jsonStr)
     jsonValue, _ := json.Marshal(jsonStr)
     resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
     fmt.Println(string(jsonValue))
-    fmt.Println(resp)
     if err!=nil {
       panic(err)
     }
     defer resp.Body.Close()
     var queryResp FindResponseBody
     json.NewDecoder(resp.Body).Decode(&queryResp)
+    fmt.Println(string(queryResp.ExecutionStats.ResultsReturned))
     if queryResp.ExecutionStats.ResultsReturned > 0 {
       return true, queryResp.Docs[0].Rev, queryResp.Docs[0].ID
     }
