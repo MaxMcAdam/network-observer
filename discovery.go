@@ -130,18 +130,31 @@ func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url
 func queryAuthorizedUsers(host Host, url string) (bool, bool){
   searchURL := url + "_find/"
   for _,hostname := range host.Hostnames{
-    searchHostname := Hostname{
-      Name: hostname.Name,
-      Type: hostname.Type,
+    type AddrSelector struct{
+      Selector struct {
+        Name string `json:"livehost.hostname.name"`
+      } `json:"selector"`
     }
-    jsonStr := map[string]Hostname{"selector":searchHostname}
+
+    jsonStr := AddrSelector{Selector: struct{Name string `json:"livehost.hostname.name"`}{Name:hostname.Name,},}
     jsonValue, _ := json.Marshal(jsonStr)
     resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
-    if err != nil{
+    fmt.Println(string(jsonValue))
+    if err!=nil {
       panic(err)
     }
-    if resp.StatusCode != 404 {
-      return true, false
+    defer resp.Body.Close()
+    body, _ := ioutil.ReadAll(resp.Body)
+    var queryResp FindResponseBody
+    err = json.Unmarshal(body, &queryResp)
+    //fmt.Println(string(queryResp))
+    if err!=nil {
+      panic(err)
+    }
+    fmt.Println(queryResp)
+
+    if len(queryResp.Docs) > 0 {
+      return true, queryResp.Docs[0].Host.Persistent
     }
   }
   return false, false
