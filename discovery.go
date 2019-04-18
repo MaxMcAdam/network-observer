@@ -84,12 +84,13 @@ func findChanges(liveHosts []Host, dbURL string, checkIn int) {
   liveHostDBURL := dbURL + "live-hosts/"
   authHostDBURL := dbURL + "auth-hosts/"
   for _,host := range liveHosts {
+    fmt.Println(host)
     exists := queryLiveHosts(host, liveHostDBURL, checkIn)
     if exists {
       fmt.Println("host aleady in live host db")
     } else {
       authorization, persistence := false, false
-      if len(host.Hostnames) > 1{
+      if len(host.Hostnames) > 0{
         fmt.Println("Hostname found")
         authorization, persistence = queryAuthorizedUsers(host, authHostDBURL)
       }
@@ -105,7 +106,7 @@ func findChanges(liveHosts []Host, dbURL string, checkIn int) {
 
 func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url string, checkIn int) {
   var newHostname Hostname
-  if len(host.Hostnames) < 1 {
+  if len(host.Hostnames) > 0 {
     newHostname = host.Hostnames[0]
   }
   currentTime := time.Now().String()
