@@ -171,6 +171,7 @@ func queryLiveHosts(host Host, url string) (bool, string, string){
       panic(err)
     }
     fmt.Println(queryResp)
+
     if len(queryResp.Docs) > 0 {
       return true, queryResp.Docs[0].Rev, queryResp.Docs[0].ID
     }
@@ -197,15 +198,19 @@ type LiveHost struct {
   Persistent bool `json:"persistent"`
   LastCheckin int `json:"lastcheckin"`
   TimeDiscovered string `json:"timediscovered"`
-  Rev string `json:"_rev"`
-  ID string `json:"_id"`
 }
 
 type FindResponseBody struct {
-  Docs []LiveHost `json:"docs"`
+  Docs []Doc `json:"docs"`
   Bookmark string `json:"bookmark"`
   Warning string `json:"warning"`
   //ExecutionStats ExecStats `json:"execution_stats"`
+}
+
+type Doc struct {
+  ID string `json:"_id"`
+  Rev string `json:"_rev"`
+  Host LiveHost `json:"livehost"`
 }
 
 type ExecStats struct {
