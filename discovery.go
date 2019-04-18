@@ -26,7 +26,7 @@ func main() {
   for true {
     findChanges(parseNmap(), url, checkIn)
     checkIn++
-    time.Sleep(time.Minute)
+    time.Sleep(15 * time.Second)
   }
 }
 
@@ -84,10 +84,9 @@ func findChanges(liveHosts []Host, dbURL string, checkIn int) {
   liveHostDBURL := dbURL + "live-hosts/"
   authHostDBURL := dbURL + "auth-hosts/"
   for _,host := range liveHosts {
-    exists, docRev, docID := queryLiveHosts(host, liveHostDBURL)
+    exists := queryLiveHosts(host, liveHostDBURL, checkIn)
     if exists {
       fmt.Println("host aleady in live host db")
-      updateCheckin(docRev, docID, dbURL, checkIn)
     } else {
       authorization, persistence := false, false
       if len(host.Hostnames) > 1{
@@ -146,7 +145,7 @@ func queryAuthorizedUsers(host Host, url string) (bool, bool){
   return false, false
 }
 
-func queryLiveHosts(host Host, url string) (bool, string, string){
+func queryLiveHosts(host Host, url string, checkIn int) bool{
   searchURL := url + "_find/"
   for _,address := range host.Addresses{
     type AddrSelector struct{
@@ -173,17 +172,18 @@ func queryLiveHosts(host Host, url string) (bool, string, string){
     fmt.Println(queryResp)
 
     if len(queryResp.Docs) > 0 {
-      return true, queryResp.Docs[0].Rev, queryResp.Docs[0].ID
+      updateCheckin(queryResp.Docs[0], checkIn, url)
+      return true
     }
   }
 
-  return false, "", ""
+  return false
 }
 
-func updateCheckin(docRev string, docID string, url string, checkIn int){
-  url = url + docID + "/"
-  jsonStr := map[string]interface{}{"lastcheckin":checkIn,"_rev":docRev}
-  jsonValue, _ := json.Marshal(jsonStr)
+func updateCheckin(docToRev Doc, checkIn int, url string){
+  url = url + docToRev.ID + "/"
+  docToRev.Host.LastCheckin = checkIn
+  jsonValue, _ := json.Marshal(docToRev)
   _, err := http.NewRequest(http.MethodPut,url, bytes.NewBuffer(jsonValue))
   if err != nil{
     panic(err)
