@@ -184,10 +184,11 @@ func updateCheckin(docToRev Doc, checkIn int, url string){
   url = url + docToRev.ID + "/"
   docToRev.Host.LastCheckin = checkIn
   type RevCheckin struct {
+    RevID string `json:"_rev"`
+    DocID string `json:"_id"`
     NewCheckin int `json:"livehost.lastcheckin"`
-    RevID string `json:"rev"`
   }
-  jsonRev := RevCheckin{NewCheckin:checkIn, RevID:docToRev.Rev,}
+  jsonRev := RevCheckin{DocID:docToRev.ID,RevID:docToRev.Rev,NewCheckin:checkIn,}
   jsonValue, _ := json.Marshal(jsonRev)
   _, err := http.NewRequest(http.MethodPut,url, bytes.NewBuffer(jsonValue))
   if err != nil{
