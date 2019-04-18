@@ -151,11 +151,11 @@ func queryLiveHosts(host Host, url string) (bool, string, string){
   for _,address := range host.Addresses{
     type AddrSelector struct{
       Selector struct {
-        Addr string `json:"ipaddress.addr"`
+        Addr string `json:"livehost.ipaddress.addr"`
       } `json:"selector"`
     }
 
-    jsonStr := AddrSelector{Selector: struct{Addr string `json:"ipaddress.addr"`}{Addr:address.Addr,},}
+    jsonStr := AddrSelector{Selector: struct{Addr string `json:"livehost.ipaddress.addr"`}{Addr:address.Addr,},}
     fmt.Println("jsonStr for address selector ", jsonStr)
     jsonValue, _ := json.Marshal(jsonStr)
     resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
