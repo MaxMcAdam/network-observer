@@ -215,7 +215,8 @@ func updateCheckin(docToRev Doc, checkIn int, url string) {
 
 	cmdFunction := "curl"
 	//cmdArgs := []string{"curl", "-X PUT", updateURL, "-d", "'", string(jsonValue), "'"}
-	cmd := exec.Command(cmdFunction, "curl", "-X PUT", updateURL, "-d", "'", string(jsonValue), "'")
+	strDocToRev := "'" + string(jsonValue) + "'"
+	cmd := exec.Command(cmdFunction, "curl", "-X PUT", updateURL, "-d", strDocToRev)
 
 	cmd.Start()
 
