@@ -11,9 +11,9 @@ import (
 	_ "net"
 	"net/http"
 	_ "os"
-	"os/exec"
+	_ "os/exec"
 	_ "sync"
-	"time"
+	_ "time"
 )
 
 func queryAuthorizedUsers(host Host, url string) (bool, bool) {
@@ -61,12 +61,12 @@ func queryLiveHosts(host Host, url string, checkIn int) bool {
 			Addr string `json:"livehost.ipaddress.addr"`
 		}{Addr: address.Addr}}
 		jsonValue, _ := json.Marshal(jsonStr)
-    resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
+		resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
 		if err != nil {
 			panic(err)
 		}
 		defer resp.Body.Close()
-    body, _ :+ ioutil.ReadAll(resp.Body)
+		body, _ := ioutil.ReadAll(resp.Body)
 		var queryResp FindResponseBody
 		err = json.Unmarshal(body, &queryResp)
 		if err != nil {

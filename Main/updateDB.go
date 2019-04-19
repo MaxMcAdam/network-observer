@@ -3,7 +3,7 @@ package main
 import (
 	_ "bufio"
 	"bytes"
-	_ "encoding/json"
+	"encoding/json"
 	_ "encoding/xml"
 	_ "fmt"
 	_ "io"
