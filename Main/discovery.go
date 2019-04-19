@@ -2,8 +2,6 @@ package main
 
 import (
 	_ "bufio"
-	"bytes"
-	"encoding/json"
 	_ "encoding/json"
 	"encoding/xml"
 	"fmt"
@@ -118,122 +116,6 @@ func findDroppedHosts(baseURL string, currentCheckin int) {
 	}
 }
 
-func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url string, checkIn int) {
-	var newHostname Hostname
-	if len(host.Hostnames) > 0 {
-		newHostname = host.Hostnames[0]
-	}
-	currentTime := time.Now().String()
-	newHost := LiveHost{
-		IPAddress:      host.Addresses[0],
-		LiveHostname:   newHostname,
-		Authorized:     hostAuthorized,
-		Persistent:     hostPersistent,
-		LastCheckin:    checkIn,
-		TimeDiscovered: currentTime,
-	}
-	jsonStr := map[string]LiveHost{"livehost": newHost}
-	jsonValue, _ := json.Marshal(jsonStr)
-	_, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
-	if err != nil {
-		panic(err)
-	}
-}
-
-func queryAuthorizedUsers(host Host, url string) (bool, bool) {
-	searchURL := url + "_find/"
-	for _, hostname := range host.Hostnames {
-		type AddrSelector struct {
-			Selector struct {
-				Name string `json:"livehost.hostname.name"`
-			} `json:"selector"`
-		}
-
-		jsonStr := AddrSelector{Selector: struct {
-			Name string `json:"livehost.hostname.name"`
-		}{Name: hostname.Name}}
-		jsonValue, _ := json.Marshal(jsonStr)
-		resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
-		if err != nil {
-			panic(err)
-		}
-		defer resp.Body.Close()
-		body, _ := ioutil.ReadAll(resp.Body)
-		var queryResp FindResponseBody
-		err = json.Unmarshal(body, &queryResp)
-		if err != nil {
-			panic(err)
-		}
-
-		if len(queryResp.Docs) > 0 {
-			return true, queryResp.Docs[0].Host.Persistent
-		}
-	}
-	return false, false
-}
-
-func queryLiveHosts(host Host, url string, checkIn int) bool {
-	searchURL := url + "_find/"
-	for _, address := range host.Addresses {
-		type AddrSelector struct {
-			Selector struct {
-				Addr string `json:"livehost.ipaddress.addr"`
-			} `json:"selector"`
-		}
-
-		jsonStr := AddrSelector{Selector: struct {
-			Addr string `json:"livehost.ipaddress.addr"`
-		}{Addr: address.Addr}}
-		jsonValue, _ := json.Marshal(jsonStr)
-		resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
-		if err != nil {
-			panic(err)
-		}
-		defer resp.Body.Close()
-		body, _ := ioutil.ReadAll(resp.Body)
-		var queryResp FindResponseBody
-		err = json.Unmarshal(body, &queryResp)
-		if err != nil {
-			panic(err)
-		}
-
-		if len(queryResp.Docs) > 0 {
-			updateCheckin(queryResp.Docs[0], checkIn, url)
-			return true
-		}
-	}
-
-	return false
-}
-
-func updateCheckin(docToRev Doc, checkIn int, url string) {
-	updateURL := url + docToRev.ID + "/"
-	docToRev.Host.LastCheckin = checkIn
-	jsonValue, _ := json.Marshal(docToRev)
-	var printable Doc
-	_ = json.Unmarshal(jsonValue, &printable)
-
-	cmdFunction := "curl"
-	//cmdArgs := []string{"curl", "-X PUT", updateURL, "-d", "'", string(jsonValue), "'"}
-	strDocToRev := "'" + string(jsonValue) + "'"
-	cmd := exec.Command(cmdFunction, "curl", "-X PUT", updateURL, "-d", strDocToRev)
-
-	cmd.Start()
-
-	//fmt.Println(printable)
-	//resp, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(jsonValue))
-	//if err != nil {
-	//	panic(err)
-	//}
-
-	//defer resp.Body.Close()
-	//fmt.Println("http PUT Response Header: ", resp.Header)
-	//body, _ := ioutil.ReadAll(resp.Body)
-	//var queryResp FindResponseBody
-	//fmt.Println("http PUT Response Body: ", queryResp)
-	//json.Unmarshal(body, &queryResp)
-}
-
 type LiveHost struct {
 	IPAddress      Address  `json:"ipaddress"`
 	LiveHostname   Hostname `json:"hostname"`
@@ -241,6 +123,12 @@ type LiveHost struct {
 	Persistent     bool     `json:"persistent"`
 	LastCheckin    int      `json:"lastcheckin"`
 	TimeDiscovered string   `json:"timediscovered"`
+}
+
+type AuthHost struct {
+	AuthHostname Hostname `json:"hostname"`
+	Persistent   bool     `json:"persistent"`
+	DeviceDesc   string   `json:"devdesc"`
 }
 
 type FindResponseBody struct {
