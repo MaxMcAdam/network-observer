@@ -5,13 +5,13 @@ import (
 	"bytes"
 	"encoding/json"
 	_ "encoding/xml"
-	_ "fmt"
+	"fmt"
 	_ "io"
-	_ "io/ioutil"
+	"io/ioutil"
 	_ "net"
 	"net/http"
 	_ "os"
-	"os/exec"
+	_ "os/exec"
 	_ "sync"
 	"time"
 )
@@ -45,24 +45,23 @@ func updateCheckin(docToRev Doc, checkIn int, url string) {
 	var printable Doc
 	_ = json.Unmarshal(jsonValue, &printable)
 
-	cmdFunction := "curl"
+	//cmdFunction := "curl"
 	//cmdArgs := []string{"curl", "-X PUT", updateURL, "-d", "'", string(jsonValue), "'"}
-	strDocToRev := "'" + string(jsonValue) + "'"
-
-	cmd := exec.Command(cmdFunction, "curl", "-X PUT", updateURL, "-d", strDocToRev)
-
-	cmd.Start()
+	//fmt.Println()
+	//strDocToRev := "'" + string(jsonValue) + "'"
+	//cmd := exec.Command(cmdFunction, "curl", "-X PUT", updateURL, "-d", strDocToRev)
+	//cmd.Start()
 
 	//fmt.Println(printable)
-	//resp, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(jsonValue))
-	//if err != nil {
-	//	panic(err)
-	//}
+	resp, err := http.NewRequest(http.MethodPut, updateURL, bytes.NewBuffer(jsonValue))
+	if err != nil {
+		fmt.Println(err)
+	}
 
-	//defer resp.Body.Close()
-	//fmt.Println("http PUT Response Header: ", resp.Header)
-	//body, _ := ioutil.ReadAll(resp.Body)
-	//var queryResp FindResponseBody
-	//fmt.Println("http PUT Response Body: ", queryResp)
-	//json.Unmarshal(body, &queryResp)
+	defer resp.Body.Close()
+	fmt.Println("http PUT Response Header: ", resp.Header)
+	body, _ := ioutil.ReadAll(resp.Body)
+	var queryResp FindResponseBody
+	fmt.Println("http PUT Response Body: ", queryResp)
+	json.Unmarshal(body, &queryResp)
 }
