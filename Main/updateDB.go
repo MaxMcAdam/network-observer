@@ -44,6 +44,7 @@ func updateCheckin(docToRev Doc, checkIn int, url string) {
 	jsonValue, _ := json.Marshal(docToRev)
 	var printable Doc
 	_ = json.Unmarshal(jsonValue, &printable)
+	fmt.Println("\n", printable)
 
 	//cmdFunction := "curl"
 	//cmdArgs := []string{"curl", "-X PUT", updateURL, "-d", "'", string(jsonValue), "'"}
