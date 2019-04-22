@@ -51,7 +51,9 @@ func updateCheckin(docToRev Doc, checkIn int, url string) {
 	fmt.Println()
 	strDocToRev := "'" + string(jsonValue) + "'"
 	cmd := exec.Command(cmdFunction, "-X PUT", updateURL, "-H", "Content-Type:application/json", "-d", strDocToRev)
-	cmd.Start()
+	output, _ := cmd.StdoutPipe()
+	fmt.Println(output)
+	cmd.Run()
 
 	//fmt.Println(printable)
 	//resp, err := http.NewRequest(http.MethodPut, updateURL, bytes.NewBuffer(jsonValue))
