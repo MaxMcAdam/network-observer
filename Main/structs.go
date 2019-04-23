@@ -8,9 +8,9 @@ import (
 type LiveHost struct {
 	IPAddress      Address  `json:"ipaddress"`
 	LiveHostname   Hostname `json:"hostname"`
-	Authorized     bool     `json:"authorized"`
-	Persistent     bool     `json:"persistent"`
-	LastCheckin    int      `json:"lastcheckin"`
+	Authorized     string   `json:"authorized"`
+	Persistent     string   `json:"persistent"`
+	LastCheckin    string   `json:"lastcheckin"`
 	TimeDiscovered string   `json:"timediscovered"`
 }
 
