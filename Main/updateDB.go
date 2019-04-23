@@ -46,13 +46,13 @@ func updateCheckin(docToRev Doc, checkIn int, url string) {
 	//_ = json.Unmarshal(jsonValue, &printable)
 	//fmt.Println("\n", printable)
 
-	cmdFunction := "curl"
 	//cmdArgs := []string{"curl", "-X PUT", updateURL, "-d", "'", string(jsonValue), "'"}
 	fmt.Println()
 	strDocToRev := "'" + string(jsonValue) + "'"
-	cmd := exec.Command(cmdFunction, "-X PUT", updateURL, "-H", "Content-Type:application/json", "-d", strDocToRev)
-	output, _ := cmd.StdoutPipe()
-	fmt.Println(output)
+	cmd := exec.Command("curl", "-X", "PUT", updateURL, "-H", "Content-Type:application/json", "-d", strDocToRev)
+	output, _ := cmd.CombinedOutput()
+	//var strOutput
+	fmt.Println(string(output))
 	cmd.Run()
 
 	//fmt.Println(printable)
