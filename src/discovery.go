@@ -125,9 +125,18 @@ func findDroppedHosts(baseURL string, currentCheckin int) {
 	}
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
-	var queryResp FindResponseBody
+	var queryResp AllDocsResp
 	json.Unmarshal(body, &queryResp)
-	for _, doc := range queryResp.Docs {
+
+	for _, row := range queryResp.Rows {
+		resp, err := http.Get(baseURL + "live-hosts/" + row.DocId)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer resp.Body.Close()
+		body, _ := ioutil.ReadAll(resp.Body)
+		var doc Doc
+		json.Unmarshal(body, &queryResp)
 		if doc.Host.LastCheckin < currentCheckin-2 {
 			if doc.Host.Persistent {
 				fmt.Println("Persistent host " + doc.Host.LiveHostname.Name + " has dropped")

@@ -69,3 +69,15 @@ type Address struct {
 	Addr     string `xml:"addr,attr" json:"addr"`
 	AddrType string `xml:"addrtype,attr" json:"addrtype"`
 }
+
+type AllDocsResp struct {
+	TotalRow int          `json:"total_rows"`
+	Offset   int          `json:"offset"`
+	Rows     []AllDocsRow `json:"rows"`
+}
+
+type AllDocsRow struct {
+	DocId  string `json:"id"`
+	DocKey string `json:"key"`
+	DocRev string `json:"value.rev"`
+}
