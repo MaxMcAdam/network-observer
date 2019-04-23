@@ -7,11 +7,11 @@ import (
 	_ "encoding/xml"
 	"fmt"
 	_ "io"
-	_ "io/ioutil"
+	"io/ioutil"
 	_ "net"
 	"net/http"
 	_ "os"
-	"os/exec"
+	_ "os/exec"
 	_ "sync"
 	"time"
 )
@@ -46,25 +46,24 @@ func updateCheckin(docToRev Doc, checkIn int, url string) {
 	//_ = json.Unmarshal(jsonValue, &printable)
 	//fmt.Println("\n", printable)
 
-	//cmdArgs := []string{"curl", "-X PUT", updateURL, "-d", "'", string(jsonValue), "'"}
-	fmt.Println()
-	strDocToRev := "'" + string(jsonValue) + "'"
-	cmd := exec.Command("curl", "-X", "PUT", updateURL, "-H", "Content-Type:application/json", "-d", strDocToRev)
-	output, _ := cmd.CombinedOutput()
+	//fmt.Println()
+	//strDocToRev := "''" + string(jsonValue) + "'"
+	//cmd := exec.Command("curl", "-X", "PUT", updateURL, "-H", "Content-Type:application/json", "-d", strDocToRev)
+	//output, _ := cmd.CombinedOutput()
 	//var strOutput
-	fmt.Println(string(output))
-	cmd.Run()
+	//fmt.Println(string(output))
+	//cmd.Run()
 
 	//fmt.Println(printable)
-	//resp, err := http.NewRequest(http.MethodPut, updateURL, bytes.NewBuffer(jsonValue))
-	//if err != nil {
-	//	fmt.Println(err)
-	//}
+	resp, err := http.NewRequest(http.MethodPut, updateURL, bytes.NewBuffer(jsonValue))
+	if err != nil {
+		fmt.Println(err)
+	}
 
-	//defer resp.Body.Close()
-	//fmt.Println("http PUT Response Header: ", resp.Header)
-	//body, _ := ioutil.ReadAll(resp.Body)
-	//var queryResp FindResponseBody
-	//fmt.Println("http PUT Response Body: ", queryResp)
-	//json.Unmarshal(body, &queryResp)
+	defer resp.Body.Close()
+	fmt.Println("http PUT Response Header: ", resp.Header)
+	body, _ := ioutil.ReadAll(resp.Body)
+	var queryResp FindResponseBody
+	fmt.Println("http PUT Response Body: ", queryResp)
+	json.Unmarshal(body, &queryResp)
 }
