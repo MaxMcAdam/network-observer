@@ -10,28 +10,53 @@ import (
 	"net"
 	_ "net"
 	"net/http"
-	_ "os"
+	"os"
 	"os/exec"
+	"strconv"
 	"sync"
-	_ "time"
+	"time"
 )
 
 func main() {
-	//checkIn := 0
-	//url := "http://127.0.0.1:5984/"
+	mock := false
+	var err error
+	if len(os.Args) > 1 {
+		mock, err = strconv.ParseBool(os.Args[1])
+		if err != nil {
+			mock = false
+		}
+	}
+
+	checkIn := 0
+	url := "http://127.0.0.1:5984/"
 	addrs := getNetwork()
-	var wg sync.WaitGroup
-	wg.Add(1)
-	parseNmap(discovery(&wg, addrs[0]))
-	wg.Wait()
-	//for true {
-	//	for i := 0; i < 5; i++ {
-	//		findChanges(parseNmap(), url, checkIn)
-	//		checkIn++
-	//		time.Sleep(15 * time.Second)
-	//	}
-	//	findDroppedHosts(url, checkIn)
-	//}
+
+	for true {
+		for i := 0; i < 5; i++ {
+			var wg sync.WaitGroup
+			var hostList []Host
+			if mock {
+				xmlFile, err := os.Open("scan.xml")
+				if err != nil {
+					fmt.Println(err)
+				}
+				byteValue, _ := ioutil.ReadAll(xmlFile)
+				var scan NmapRun
+				xml.Unmarshal(byteValue, &scan)
+				defer xmlFile.Close()
+				hostList = scan.Hosts
+			} else {
+				hostList = parseNmap(discovery(&wg, addrs[0]))
+			}
+
+			findChanges(hostList, url, checkIn)
+			wg.Add(1)
+			wg.Wait()
+			checkIn++
+			time.Sleep(15 * time.Second)
+		}
+		findDroppedHosts(url, checkIn)
+	}
 }
 
 func getNetwork() []string {
