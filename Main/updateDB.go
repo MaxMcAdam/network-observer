@@ -12,6 +12,7 @@ import (
 	"net/http"
 	_ "os"
 	"os/exec"
+	"strconv"
 	_ "sync"
 	"time"
 )
@@ -47,7 +48,11 @@ func updateCheckin(docToRev Doc, checkIn int, url string) {
 	//fmt.Println("\n", printable)
 
 	//fmt.Println()
-	strDocToRev := "''" + string(jsonValue) + "'"
+
+  ipAddressStr := "{" + strconv.Quote("addr") + ":" + strconv.Quote(docToRev.Host.IPAddress.Addr) + "," + strconv.Quote("addrtype") + ":" + strconv.Quote(docToRev.Host.IPAddress.AddrType)"}"
+  hostnameStr := "{" + strconv.Quote("name") + ":" + strconv.Quote(docToRev.Host.LiveHostname.Name) + "," + strconv.Quote("type") + ":" + strconv.Quote(docToRev.Host.LiveHostname.Type)"}"
+  liveHostStr := "{" + strconv.Quote("ipaddress") + ":" + ipAddressStr + "," + strconv.Quote("hostname") + ":" + hostnameStr + "," + strconv.Quote("authorized") + ":" + strconv.Quote(docToRev.Host.Authorized) + "," + strconv.Quote("persistent") + ":" + strconv.Quote(docToRev.Host.Persistent) + "," + strconv.Quote("lastcheckin") + ":" + strconv.Quote(docToRev.Host.LastCheckin) + "," + strconv.Quote("timediscovered") + ":" + strconv.Quote(docToRev.Host.TimeDiscovered) + "}"
+	strDocToRev := "'{" + strconv.Quote("id") + ":" + strconv.Quote(docToRev.ID) + "," + strconv.Quote("rev") + ":" + strconv.Quote(docToRev.Rev) + "," + strconv.Quote("livehost") + ":" + liveHostStr + "}'")
 	cmd := exec.Command("curl", "-X", "PUT", updateURL, "-H", "Content-Type:application/json", "-d", strDocToRev)
 	output, _ := cmd.CombinedOutput()
 	//var strOutput
