@@ -21,6 +21,7 @@ func main() {
 	//url := "http://127.0.0.1:5984/"
 	addrs := getNetwork()
 	var wg sync.WaitGroup
+	wg.Add(1)
 	discovery(&wg, addrs[0], "scan.xml")
 	//for true {
 	//	for i := 0; i < 5; i++ {
