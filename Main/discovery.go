@@ -13,22 +13,23 @@ import (
 	"os"
 	"os/exec"
 	"sync"
-	"time"
+	_ "time"
 )
 
 func main() {
-	checkIn := 0
-	url := "http://127.0.0.1:5984/"
-	//addrs:=getNetwork()
-	//var wg sync.WaitGroup
-	for true {
-		for i := 0; i < 5; i++ {
-			findChanges(parseNmap(), url, checkIn)
-			checkIn++
-			time.Sleep(15 * time.Second)
-		}
-		findDroppedHosts(url, checkIn)
-	}
+	//checkIn := 0
+	//url := "http://127.0.0.1:5984/"
+	addrs := getNetwork()
+	var wg sync.WaitGroup
+	discovery(&wg, addrs[0], "scan.xml")
+	//for true {
+	//	for i := 0; i < 5; i++ {
+	//		findChanges(parseNmap(), url, checkIn)
+	//		checkIn++
+	//		time.Sleep(15 * time.Second)
+	//	}
+	//	findDroppedHosts(url, checkIn)
+	//}
 }
 
 func getNetwork() []string {
@@ -46,10 +47,9 @@ func getNetwork() []string {
 	return network
 }
 
-func discovery(wg *sync.WaitGroup, ipAddr string) {
-	cmdFunction := "./service.sh"
-	cmdArgs := ipAddr
-	cmd := exec.Command(cmdFunction, cmdArgs)
+func discovery(wg *sync.WaitGroup, ipAddr string, scanFile string) {
+	cmdFunction := "nmap"
+	cmd := exec.Command(cmdFunction, "-sN", "-oX", "-", ipAddr, ">", scanFile)
 	_, err := cmd.StdoutPipe()
 	cmd.Start()
 	if err != nil {
@@ -81,16 +81,14 @@ func findChanges(liveHosts []Host, dbURL string, checkIn int) {
 	authHostDBURL := dbURL + "auth-hosts/"
 	for _, host := range liveHosts {
 		exists := queryLiveHosts(host, liveHostDBURL, checkIn)
-		if exists {
-			fmt.Println("host aleady in live host db")
-		} else {
+		if !exists {
 			authorization, persistence := false, false
 			if len(host.Hostnames) > 0 {
-				fmt.Println("Hostname found")
 				authorization, persistence = queryAuthorizedUsers(host, authHostDBURL)
 			}
 			if authorization {
 				addHostToLiveHosts(host, true, persistence, liveHostDBURL, checkIn)
+				fmt.Println("Authorized host added")
 			} else {
 				fmt.Println("Unauthorized host added")
 				addHostToLiveHosts(host, false, persistence, liveHostDBURL, checkIn)
@@ -111,7 +109,15 @@ func findDroppedHosts(baseURL string, currentCheckin int) {
 	json.Unmarshal(body, &queryResp)
 	for _, doc := range queryResp.Docs {
 		if doc.Host.LastCheckin < currentCheckin-2 {
-			fmt.Println("host ", doc.Host.IPAddress.Addr, " has dropped")
+			if doc.Host.Persistent {
+				fmt.Println("Persistent host " + doc.Host.LiveHostname.Name + " has dropped")
+			} else {
+				if doc.Host.LiveHostname.Name != "" {
+					fmt.Println("host " + doc.Host.LiveHostname.Name + " has dropped")
+				} else {
+					fmt.Println("host ", doc.Host.IPAddress.Addr, " has dropped")
+				}
+			}
 		}
 	}
 }
