@@ -46,12 +46,12 @@ func main() {
 				defer xmlFile.Close()
 				hostList = scan.Hosts
 			} else {
+				wg.Add(1)
 				hostList = parseNmap(discovery(&wg, addrs[0]))
+				wg.Wait()
 			}
 
 			findChanges(hostList, url, checkIn)
-			wg.Add(1)
-			wg.Wait()
 			checkIn++
 			time.Sleep(15 * time.Second)
 		}
