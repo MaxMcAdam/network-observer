@@ -42,17 +42,18 @@ func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url
 func updateCheckin(docToRev Doc, checkIn int, url string) {
 	updateURL := url + docToRev.ID + "/"
 	docToRev.Host.LastCheckin = checkIn
-	jsonValue, _ := json.Marshal(docToRev)
+	//jsonValue, _ := json.Marshal(docToRev)
 	//var printable Doc
 	//_ = json.Unmarshal(jsonValue, &printable)
 	//fmt.Println("\n", printable)
 
 	//fmt.Println()
 
-  ipAddressStr := "{" + strconv.Quote("addr") + ":" + strconv.Quote(docToRev.Host.IPAddress.Addr) + "," + strconv.Quote("addrtype") + ":" + strconv.Quote(docToRev.Host.IPAddress.AddrType)"}"
-  hostnameStr := "{" + strconv.Quote("name") + ":" + strconv.Quote(docToRev.Host.LiveHostname.Name) + "," + strconv.Quote("type") + ":" + strconv.Quote(docToRev.Host.LiveHostname.Type)"}"
-  liveHostStr := "{" + strconv.Quote("ipaddress") + ":" + ipAddressStr + "," + strconv.Quote("hostname") + ":" + hostnameStr + "," + strconv.Quote("authorized") + ":" + strconv.Quote(docToRev.Host.Authorized) + "," + strconv.Quote("persistent") + ":" + strconv.Quote(docToRev.Host.Persistent) + "," + strconv.Quote("lastcheckin") + ":" + strconv.Quote(docToRev.Host.LastCheckin) + "," + strconv.Quote("timediscovered") + ":" + strconv.Quote(docToRev.Host.TimeDiscovered) + "}"
-	strDocToRev := "'{" + strconv.Quote("id") + ":" + strconv.Quote(docToRev.ID) + "," + strconv.Quote("rev") + ":" + strconv.Quote(docToRev.Rev) + "," + strconv.Quote("livehost") + ":" + liveHostStr + "}'")
+	ipAddressStr := "{" + strconv.Quote("addr") + ":" + strconv.Quote(docToRev.Host.IPAddress.Addr) + "," + strconv.Quote("addrtype") + ":" + strconv.Quote(docToRev.Host.IPAddress.AddrType) + "}"
+	hostnameStr := "{" + strconv.Quote("name") + ":" + strconv.Quote(docToRev.Host.LiveHostname.Name) + "," + strconv.Quote("type") + ":" + strconv.Quote(docToRev.Host.LiveHostname.Type) + "}"
+	liveHostStr := "{" + strconv.Quote("ipaddress") + ":" + ipAddressStr + "," + strconv.Quote("hostname") + ":" + hostnameStr + "," + strconv.Quote("authorized") + ":" + strconv.Quote(fmt.Sprintf("%v", docToRev.Host.Authorized)) + "," + strconv.Quote("persistent") + ":" + strconv.Quote(fmt.Sprintf("%v", docToRev.Host.Persistent)) + "," + strconv.Quote("lastcheckin") + ":" + strconv.Quote(string(docToRev.Host.LastCheckin)) + "," + strconv.Quote("timediscovered") + ":" + strconv.Quote(docToRev.Host.TimeDiscovered) + "}"
+	strDocToRev := "'{" + strconv.Quote("id") + ":" + strconv.Quote(docToRev.ID) + "," + strconv.Quote("rev") + ":" + strconv.Quote(docToRev.Rev) + "," + strconv.Quote("livehost") + ":" + liveHostStr + "}'"
+	fmt.Println(strDocToRev)
 	cmd := exec.Command("curl", "-X", "PUT", updateURL, "-H", "Content-Type:application/json", "-d", strDocToRev)
 	output, _ := cmd.CombinedOutput()
 	//var strOutput
