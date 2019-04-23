@@ -110,7 +110,7 @@ func findDroppedHosts(baseURL string, currentCheckin int) {
 	var queryResp FindResponseBody
 	json.Unmarshal(body, &queryResp)
 	for _, doc := range queryResp.Docs {
-		if doc.Host.LastCheckin != string(currentCheckin-1) {
+		if doc.Host.LastCheckin < currentCheckin-2 {
 			fmt.Println("host ", doc.Host.IPAddress.Addr, " has dropped")
 		}
 	}

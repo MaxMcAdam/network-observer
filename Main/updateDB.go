@@ -25,9 +25,9 @@ func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url
 	newHost := LiveHost{
 		IPAddress:      host.Addresses[0],
 		LiveHostname:   newHostname,
-		Authorized:     fmt.Sprintf("%v", hostAuthorized),
-		Persistent:     fmt.Sprintf("%v", hostPersistent),
-		LastCheckin:    string(checkIn),
+		Authorized:     hostAuthorized,
+		Persistent:     hostPersistent,
+		LastCheckin:    checkIn,
 		TimeDiscovered: currentTime,
 	}
 	jsonStr := map[string]LiveHost{"livehost": newHost}
@@ -40,7 +40,7 @@ func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url
 
 func updateCheckin(docToRev Doc, checkIn int, url string) {
 	updateURL := url + docToRev.ID + "/"
-	docToRev.Host.LastCheckin = string(checkIn)
+	docToRev.Host.LastCheckin = checkIn
 	jsonValue, _ := json.Marshal(docToRev)
 	//var printable Doc
 	//_ = json.Unmarshal(jsonValue, &printable)

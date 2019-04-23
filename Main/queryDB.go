@@ -42,10 +42,7 @@ func queryAuthorizedUsers(host Host, url string) (bool, bool) {
 		}
 
 		if len(queryResp.Docs) > 0 {
-			if queryResp.Docs[0].Host.Persistent == "true" {
-				return true, true
-			}
-			return true, false
+			return true, queryResp.Docs[0].Host.Persistent
 		}
 	}
 	return false, false
