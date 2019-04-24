@@ -110,7 +110,7 @@ func findDroppedHosts(baseURL string, currentCheckin int) {
 		body, _ := ioutil.ReadAll(resp.Body)
 		var doc Doc
 		json.Unmarshal(body, &queryResp)
-		if doc.Host.LastCheckin < currentCheckin-2 {
+		if doc.Host.LastCheckin < currentCheckin-4 {
 			if doc.Host.Persistent {
 				fmt.Println("Persistent host " + doc.Host.LiveHostname.Name + " has dropped")
 			} else {
@@ -119,6 +119,12 @@ func findDroppedHosts(baseURL string, currentCheckin int) {
 				} else {
 					fmt.Println("host ", doc.Host.IPAddress.Addr, " has dropped")
 				}
+			}
+			delURL := baseURL + "live-hosts/" + doc.ID + "?rev=" + doc.Rev
+			cmd := exec.Command("curl", "-X", "DELETE", delURL, "-H", "Content-Type:application/json")
+			err := cmd.Run()
+			if err != nil {
+				fmt.Println(err)
 			}
 		}
 	}
