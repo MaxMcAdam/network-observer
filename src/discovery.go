@@ -13,6 +13,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -30,6 +31,7 @@ func main() {
 	checkIn := 0
 	url := "http://127.0.0.1:5984/"
 	addrs := getNetwork()
+	fmt.Println(addrs)
 
 	for true {
 		for i := 0; i < 5; i++ {
@@ -71,7 +73,10 @@ func getNetwork() []string {
 	for _, interf := range netInterfaces {
 		if addrs, err := interf.Addrs(); err == nil {
 			for _, address := range addrs {
-				if address.String() != "127.0.0.1/8" {
+				addrParts := strings.Split(address.String(), "/")
+				netAddr := addrParts[0]
+				subnet := addrParts[1]
+				if netAddr != "127.0.0.1" && netAddr != "::1" && subnet != "64" {
 					network = append(network, address.String())
 				}
 			}
@@ -116,11 +121,19 @@ func findChanges(liveHosts []Host, dbURL string, checkIn int) {
 				authorization, persistence = queryAuthorizedUsers(host, authHostDBURL)
 			}
 			if authorization {
-				addHostToLiveHosts(host, true, persistence, liveHostDBURL, checkIn)
-				fmt.Println("Authorized host added")
+				err := addHostToLiveHosts(host, true, persistence, liveHostDBURL, checkIn)
+				if err != nil {
+					fmt.Println("Error accessing databse")
+				} else {
+					fmt.Println("Authorized host added")
+				}
 			} else {
-				fmt.Println("Unauthorized host added")
-				addHostToLiveHosts(host, false, persistence, liveHostDBURL, checkIn)
+				err := addHostToLiveHosts(host, false, persistence, liveHostDBURL, checkIn)
+				if err != nil {
+					fmt.Println("Error accessing databse")
+				} else {
+					fmt.Println("Authorized host added")
+				}
 			}
 		}
 	}

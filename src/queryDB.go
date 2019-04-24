@@ -31,18 +31,19 @@ func queryAuthorizedUsers(host Host, url string) (bool, bool) {
 		jsonValue, _ := json.Marshal(jsonStr)
 		resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
 		if err != nil {
-			panic(err)
-		}
-		defer resp.Body.Close()
-		body, _ := ioutil.ReadAll(resp.Body)
-		var queryResp FindResponseBody
-		err = json.Unmarshal(body, &queryResp)
-		if err != nil {
-			panic(err)
-		}
+			fmt.Println("Error accessing db", err)
+		} else {
+			defer resp.Body.Close()
+			body, _ := ioutil.ReadAll(resp.Body)
+			var queryResp FindResponseBody
+			err = json.Unmarshal(body, &queryResp)
+			if err != nil {
+				panic(err)
+			}
 
-		if len(queryResp.Docs) > 0 {
-			return true, queryResp.Docs[0].Host.Persistent
+			if len(queryResp.Docs) > 0 {
+				return true, queryResp.Docs[0].Host.Persistent
+			}
 		}
 	}
 	return false, false

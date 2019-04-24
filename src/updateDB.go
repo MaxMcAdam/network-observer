@@ -17,7 +17,7 @@ import (
 	"time"
 )
 
-func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url string, checkIn int) {
+func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url string, checkIn int) error {
 	var newHostname Hostname
 	if len(host.Hostnames) > 0 {
 		newHostname = host.Hostnames[0]
@@ -35,8 +35,9 @@ func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url
 	jsonValue, _ := json.Marshal(jsonStr)
 	_, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil {
-		fmt.Println("Error accessing databse", err)
+		return err
 	}
+	return nil
 }
 
 func updateCheckin(docToRev Doc, checkIn int, url string) {
