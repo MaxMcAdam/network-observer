@@ -30,11 +30,7 @@ func main() {
 	checkIn := 0
 	url := "http://127.0.0.1:5984/"
 	addr := getNetwork()
-	fmt.Println(addr)
-	var wg sync.WaitGroup
-	wg.Add(1)
-	fmt.Println(parseNmap(discovery(&wg, string(addr), false)))
-	wg.Wait()
+
 	missingDB(url)
 
 	for true {
