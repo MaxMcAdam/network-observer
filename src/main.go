@@ -28,7 +28,7 @@ func main() {
 	}
 
 	checkIn := 0
-	url := "http://127.0.0.1:5984/"
+	url := "http://admin:p4ssw0rd@127.0.0.1:5984/"
 	addr := getNetwork()
 
 	missingDB(url)
