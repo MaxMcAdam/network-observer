@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	_ "github.com/eclipse/paho.mqtt.golang"
 	"os"
 	"os/exec"
 	"strconv"
+	"sync"
 )
 
-func newAlert(alertType string, alertDevice string) {
+func newAlert(wg *sync.WaitGroup, alertType string, alertDevice string) {
 	//pubClientOptions := mqtt.NewClientOptions()
 	//pubClientOptions.Username = wiotp_org
 	//pubClientOptions.Password = wiotp_auth_token
@@ -23,4 +23,5 @@ func newAlert(alertType string, alertDevice string) {
 		fmt.Println("Error sending alert to wiotp", err)
 	}
 	fmt.Println(mosqPubOutput)
+	wg.Done()
 }

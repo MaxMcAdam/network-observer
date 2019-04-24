@@ -18,6 +18,10 @@ import (
 )
 
 func main() {
+	var wg sync.WaitGroup
+	wg.Add(1)
+	newAlert(&wg, "test-alert", "test alert device")
+	wg.Wait()
 	mock := false
 	var err error
 	if len(os.Args) > 1 {
