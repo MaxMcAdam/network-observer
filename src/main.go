@@ -34,7 +34,7 @@ func main() {
 	missingDB(url)
 
 	for true {
-		for i := 0; i < 5; i++ {
+		for i := 0; i < 1; i++ {
 			var wg sync.WaitGroup
 			var hostList []Host
 			if mock {
