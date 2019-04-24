@@ -83,3 +83,11 @@ func queryLiveHosts(host Host, url string, checkIn int) bool {
 
 	return false
 }
+
+func checkDBConn(url string) bool {
+	resp, err := http.Get(url)
+	if err != nil || resp == nil || resp.StatusCode > 299 || resp.StatusCode < 200 {
+		return false
+	}
+	return true
+}

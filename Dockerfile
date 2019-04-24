@@ -1,11 +1,10 @@
-FROM golang:1.12.4-apline3.9
+FROM golang:1.12.4-alpine3.9
 
-RUN apt-get update -y
-RUN apt-get install -y nmap
-RUN apt-get install -y net-tools
-RUN apt-get install -y curl
+RUN apk add nmap
+RUN apk add net-tools
+RUN apk add curl
 
 COPY src/ /
 
 WORKDIR /
-RUN go run /src/*.go
+CMD go run *.go $MOCK
