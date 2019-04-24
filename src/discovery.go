@@ -48,7 +48,7 @@ func main() {
 			} else {
 				for _, addr := range addrs {
 					wg.Add(1)
-					if addr[0:1] == ":" || addr[1:2] == ":" || addr[2:3] == ":" || addr[3:4] == ":" {
+					if addr[0:1] == ":" || addr[1:2] == ":" || addr[2:3] == ":" || addr[3:4] == ":" || addr[4:5] == ":" || addr[5:6] == ":" {
 						hostList = append(parseNmap(discovery(&wg, string(addr), true)))
 					} else {
 						hostList = append(parseNmap(discovery(&wg, string(addr), false)))
