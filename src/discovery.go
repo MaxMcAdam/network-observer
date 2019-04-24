@@ -102,7 +102,6 @@ func findDroppedHosts(baseURL string, currentCheckin int) {
 	json.Unmarshal(body, &queryResp)
 
 	for _, row := range queryResp.Rows {
-		fmt.Println("Dropped host query result", row)
 		resp, err := http.Get(baseURL + "live-hosts/" + row.DocId)
 		if err != nil {
 			fmt.Println(err)
