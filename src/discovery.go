@@ -46,7 +46,6 @@ func main() {
 				defer xmlFile.Close()
 				hostList = scan.Hosts
 			} else {
-				//TODO: make it hostList.append for all addrs
 				for addr := range addrs {
 					wg.Add(1)
 					hostList = append(parseNmap(discovery(&wg, string(addr))))
