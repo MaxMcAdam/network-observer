@@ -46,9 +46,13 @@ func main() {
 				defer xmlFile.Close()
 				hostList = scan.Hosts
 			} else {
-				for addr := range addrs {
+				for _, addr := range addrs {
 					wg.Add(1)
-					hostList = append(parseNmap(discovery(&wg, string(addr))))
+					if addr[0:1] == ":" || addr[1:2] == ":" || addr[2:3] == ":" || addr[3:4] == ":" {
+						hostList = append(parseNmap(discovery(&wg, string(addr), true)))
+					} else {
+						hostList = append(parseNmap(discovery(&wg, string(addr), false)))
+					}
 				}
 				wg.Wait()
 			}
@@ -76,10 +80,13 @@ func getNetwork() []string {
 	return network
 }
 
-func discovery(wg *sync.WaitGroup, ipAddr string) []byte {
+func discovery(wg *sync.WaitGroup, ipAddr string, ipv6 bool) []byte {
 	cmdFunction := "nmap"
 	fmt.Println(cmdFunction, "-sn", "-oX", "-", ipAddr)
 	cmd := exec.Command(cmdFunction, "-sn", "-oX", "-", ipAddr)
+	if ipv6 {
+		cmd = exec.Command(cmdFunction, "-6", "-sn", "-oX", "-", ipAddr)
+	}
 	outputScan, err := cmd.CombinedOutput()
 
 	if err != nil {
