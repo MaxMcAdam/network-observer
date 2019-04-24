@@ -46,8 +46,11 @@ func main() {
 				defer xmlFile.Close()
 				hostList = scan.Hosts
 			} else {
-				wg.Add(1)
-				hostList = parseNmap(discovery(&wg, addrs[0]))
+				//TODO: make it hostList.append for all addrs
+				for addr := range addrs {
+					wg.Add(1)
+					hostList = append(parseNmap(discovery(&wg, string(addr))))
+				}
 				wg.Wait()
 			}
 
@@ -64,8 +67,8 @@ func getNetwork() []string {
 	netInterfaces, _ := net.Interfaces()
 	for _, interf := range netInterfaces {
 		if addrs, err := interf.Addrs(); err == nil {
-			for index, address := range addrs {
-				if interf.Name == "en0" && index == 1 {
+			for _, address := range addrs {
+				if address.String() != "127.0.0.1/8" {
 					network = append(network, address.String())
 				}
 			}
