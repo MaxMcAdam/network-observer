@@ -68,7 +68,8 @@ func findChanges(liveHosts []Host, dbURL string, checkIn int) {
 		exists := queryLiveHosts(host, liveHostDBURL, checkIn)
 		if !exists {
 			authorization, persistence := false, false
-			if len(host.Hostnames) > 0 {
+			hostNamed := len(host.Hostnames) > 0
+			if hostNamed {
 				authorization, persistence = queryAuthorizedUsers(host, authHostDBURL)
 			}
 			if authorization {
@@ -77,13 +78,19 @@ func findChanges(liveHosts []Host, dbURL string, checkIn int) {
 					fmt.Println("Error accessing databse")
 				} else {
 					fmt.Println("Authorized host added")
+					newAlert("new-auth-host", host.Hostnames[0].Name)
 				}
 			} else {
 				err := addHostToLiveHosts(host, false, persistence, liveHostDBURL, checkIn)
 				if err != nil {
 					fmt.Println("Error accessing databse")
 				} else {
-					fmt.Println("Authorized host added")
+					fmt.Println("Unauthorized host added")
+					if hostNamed {
+						newAlert("new-unauth-host", host.Hostnames[0].Name)
+					} else {
+						newAlert("new-unauth-host", host.Addresses[0].Addr)
+					}
 				}
 			}
 		}
