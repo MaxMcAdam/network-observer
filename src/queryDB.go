@@ -5,7 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	_ "encoding/xml"
-	_ "fmt"
+	"fmt"
 	_ "io"
 	"io/ioutil"
 	_ "net"
@@ -63,19 +63,20 @@ func queryLiveHosts(host Host, url string, checkIn int) bool {
 		jsonValue, _ := json.Marshal(jsonStr)
 		resp, err := http.Post(searchURL, "application/json", bytes.NewBuffer(jsonValue))
 		if err != nil {
-			panic(err)
-		}
-		defer resp.Body.Close()
-		body, _ := ioutil.ReadAll(resp.Body)
-		var queryResp FindResponseBody
-		err = json.Unmarshal(body, &queryResp)
-		if err != nil {
-			panic(err)
-		}
+			fmt.Println("Error accessing databse", err)
+		} else {
+			defer resp.Body.Close()
+			body, _ := ioutil.ReadAll(resp.Body)
+			var queryResp FindResponseBody
+			err = json.Unmarshal(body, &queryResp)
+			if err != nil {
+				panic(err)
+			}
 
-		if len(queryResp.Docs) > 0 {
-			updateCheckin(queryResp.Docs[0], checkIn, url)
-			return true
+			if len(queryResp.Docs) > 0 {
+				updateCheckin(queryResp.Docs[0], checkIn, url)
+				return true
+			}
 		}
 	}
 

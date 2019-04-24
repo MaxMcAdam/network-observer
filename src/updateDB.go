@@ -35,7 +35,7 @@ func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url
 	jsonValue, _ := json.Marshal(jsonStr)
 	_, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil {
-		panic(err)
+		fmt.Println("Error accessing databse", err)
 	}
 }
 
