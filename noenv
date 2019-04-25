@@ -1,9 +1,1 @@
-export ARCH=amd64
-export SERVICE_VERSION=0.0.1
-export WIOTP_AUTH_TOKEN=net-obs-iotp-token
-export WIOTP_AUTH_METHOD=use-token-auth
-export WIOTP_DEVICE_ID=Network_observer_vm_test
-export WIOTP_DEVICE_TYPE=Network-Observer
-export WIOTP_ORG=lyin2y
 export COUCHDB_URL=http://127.0.0.1:5984
-export MOCK=true

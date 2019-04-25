@@ -85,9 +85,34 @@ func queryLiveHosts(host Host, url string, checkIn int) bool {
 }
 
 func checkDBConn(url string) bool {
-	resp, err := http.Get(url)
+	resp, err := http.Get(url + "/_all_dbs")
 	if err != nil || resp == nil || resp.StatusCode > 299 || resp.StatusCode < 200 {
 		return false
 	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var dbList []string
+	json.Unmarshal(body, &dbList)
+	reqDBs := []string{"_users", "_replicators", "_global_changes", "auth-hosts", "live_hosts"}
+	if !allTargetsInSlice(reqDBs, dbList) {
+		return false
+	}
 	return true
+}
+
+func allTargetsInSlice(targets []string, searchSlice []string) bool {
+	for _, target := range targets {
+		if !targetInSlice(target, searchSlice) {
+			return false
+		}
+	}
+	return true
+}
+func targetInSlice(target string, searchSlice []string) bool {
+	for _, sliceElement := range searchSlice {
+		if sliceElement == target {
+			return true
+		}
+	}
+	return false
 }
