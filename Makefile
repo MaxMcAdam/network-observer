@@ -2,13 +2,13 @@
 -include horizon/hzn.cfg
 
 build:
-	docker build -t $(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION) .
+	docker build -t $(DOCKER_USER)/$(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION) .
 
 dev:
-	docker run --net=host -it $(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION) /bin/sh
+	docker run --net=host -it $(DOCKER_USER)/$(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION) /bin/sh
 
 run:
-	docker run -d --env-file wiotpenv --net=host $(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION)
+	docker run -d --env-file wiotpenv --net=host $(DOCKER_USER)/$(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION)
 
 publish-service:
 	hzn exchange service publish -f horizon/service.definition.json -k $(HZN_PRIVATE_KEY_FILE) -K $(HZN_PUBLIC_KEY_FILE)
@@ -18,6 +18,6 @@ publish-pattern:
 	hzn exchange pattern publish -p network-observer -f horizon/pattern/network-observer.json
 
 clean:
-	-docker rmi $(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION) 2> /dev/null || :
+	-docker rmi $(DOCKER_USER)$(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION) 2> /dev/null || :
 
 .PHONY: build clean
