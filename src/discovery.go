@@ -61,7 +61,7 @@ func parseNmap(scanOutput []byte) []Host {
 	return scan.Hosts
 }
 
-func findChanges(liveHosts []Host, dbURL string, checkIn int) {
+func findChanges(liveHosts []Host, dbURL string, checkIn int, wiotpenv [4]string) {
 	liveHostDBURL := dbURL + "live-hosts/"
 	authHostDBURL := dbURL + "auth-hosts/"
 	for _, host := range liveHosts {
@@ -80,7 +80,7 @@ func findChanges(liveHosts []Host, dbURL string, checkIn int) {
 				} else {
 					fmt.Println("Authorized host added")
 					wg.Add(1)
-					newAlert(&wg, "new-auth-host", host.Hostnames[0].Name)
+					newAlert(&wg, "new-auth-host", host.Hostnames[0].Name, wiotpenv)
 				}
 			} else {
 				err := addHostToLiveHosts(host, false, persistence, liveHostDBURL, checkIn)
@@ -90,10 +90,10 @@ func findChanges(liveHosts []Host, dbURL string, checkIn int) {
 					fmt.Println("Unauthorized host added")
 					if hostNamed {
 						wg.Add(1)
-						newAlert(&wg, "new-unauth-host", host.Hostnames[0].Name)
+						newAlert(&wg, "new-unauth-host", host.Hostnames[0].Name, wiotpenv)
 					} else {
 						wg.Add(1)
-						newAlert(&wg, "new-unauth-host", host.Addresses[0].Addr)
+						newAlert(&wg, "new-unauth-host", host.Addresses[0].Addr, wiotpenv)
 					}
 				}
 			}

@@ -18,9 +18,10 @@ import (
 )
 
 func main() {
+	wiotpenv := [4]string{"lyim2y", "Network-Observer", "Network_observer_vm_test", "net-obs-iotp-token"}
 	var wg sync.WaitGroup
 	wg.Add(1)
-	newAlert(&wg, "test-alert", "test alert device")
+	newAlert(&wg, "test-alert", "test alert device", wiotpenv)
 	wg.Wait()
 	mock := false
 	var err error
@@ -61,7 +62,7 @@ func main() {
 				wg.Wait()
 			}
 
-			findChanges(hostList, url, checkIn)
+			findChanges(hostList, url, checkIn, wiotpenv)
 			checkIn++
 			time.Sleep(15 * time.Second)
 			missingDB(url)
