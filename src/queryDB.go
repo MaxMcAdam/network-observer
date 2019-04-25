@@ -93,7 +93,7 @@ func checkDBConn(url string) bool {
 	body, _ := ioutil.ReadAll(resp.Body)
 	var dbList []string
 	json.Unmarshal(body, &dbList)
-	reqDBs := []string{"_users", "_replicators", "_global_changes", "auth-hosts", "live_hosts"}
+	reqDBs := []string{"_users", "_replicators", "_global_changes", "auth-hosts", "live-hosts"}
 	if !allTargetsInSlice(reqDBs, dbList) {
 		return false
 	}
