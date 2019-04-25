@@ -18,22 +18,29 @@ import (
 )
 
 func main() {
-	wiotpenv := [4]string{"lyim2y", "Network-Observer", "Network_observer_vm_test", "net-obs-iotp-token"}
-	var wg sync.WaitGroup
-	wg.Add(1)
-	newAlert(&wg, "test-alert", "test alert device", wiotpenv)
-	wg.Wait()
+	url := "http://admin:p4ssw0rd@127.0.0.1:5984/"
+	if len(os.Args) > 1 {
+		url = os.Args[1]
+	}
+
+	wiotpenv := [4]string{"", "", "", ""}
+	if len(os.Args) > 5 {
+		wiotpenv = [4]string{os.Args[2], os.Args[3], os.Args[4], os.Args[5]}
+	} else {
+		fmt.Println("Missing Watsion IoT Platform variables")
+	}
+
 	mock := false
 	var err error
-	if len(os.Args) > 1 {
-		mock, err = strconv.ParseBool(os.Args[1])
-		if err != nil {
-			mock = false
-		}
+	if len(os.Args) > 6 {
+		mock, err = strconv.ParseBool(os.Args[6])
+	}
+	if err != nil {
+		mock = false
 	}
 
 	checkIn := 0
-	url := "http://admin:p4ssw0rd@127.0.0.1:5984/"
+
 	addr := getNetwork()
 
 	missingDB(url)
