@@ -85,7 +85,7 @@ func queryLiveHosts(host Host, url string, checkIn int) bool {
 }
 
 func checkDBConn(url string) bool {
-	resp, err := http.Get(url + "/_all_dbs")
+	resp, err := http.Get(url + "_all_dbs/")
 	if err != nil || resp == nil || resp.StatusCode > 299 || resp.StatusCode < 200 {
 		return false
 	}
