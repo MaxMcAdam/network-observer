@@ -102,7 +102,7 @@ func findChanges(liveHosts []Host, dbURL string, checkIn int, wiotpenv [4]string
 	}
 }
 
-func findDroppedHosts(baseURL string, currentCheckin int) {
+func findDroppedHosts(baseURL string, currentCheckin int, wiotpenv [4]string) {
 	searchURL := baseURL + "live-hosts/_all_docs"
 	resp, err := http.Get(searchURL)
 	if err != nil {
@@ -123,15 +123,23 @@ func findDroppedHosts(baseURL string, currentCheckin int) {
 		var doc Doc
 		json.Unmarshal(body, &doc)
 		if doc.Host.LastCheckin < currentCheckin-4 {
+			var wg sync.WaitGroup
 			if doc.Host.Persistent {
 				fmt.Println("Persistent host " + doc.Host.LiveHostname.Name + " has dropped")
+				wg.Add(1)
+				newAlert(&wg, "persistent-host-dropped", doc.Host.LiveHostname.Name, wiotpenv)
 			} else {
 				if doc.Host.LiveHostname.Name != "" {
 					fmt.Println("host " + doc.Host.LiveHostname.Name + " has dropped")
+					wg.Add(1)
+					newAlert(&wg, "host-dropped", doc.Host.LiveHostname.Name, wiotpenv)
 				} else {
 					fmt.Println("host ", doc.Host.IPAddress.Addr, " has dropped")
+					wg.Add(1)
+					newAlert(&wg, "host-dropped", doc.Host.IPAddress.Addr, wiotpenv)
 				}
 			}
+			wg.Wait()
 			delURL := baseURL + "live-hosts/" + doc.ID + "?rev=" + doc.Rev
 			cmd := exec.Command("curl", "-X", "DELETE", delURL, "-H", "Content-Type:application/json")
 			err := cmd.Run()

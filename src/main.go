@@ -50,7 +50,7 @@ func main() {
 			var wg sync.WaitGroup
 			var hostList []Host
 			if mock {
-				xmlFile, err := os.Open("../scan.xml")
+				xmlFile, err := os.Open("./scan.xml")
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -74,7 +74,7 @@ func main() {
 			time.Sleep(15 * time.Second)
 			missingDB(url)
 		}
-		findDroppedHosts(url, checkIn)
+		findDroppedHosts(url, checkIn, wiotpenv)
 	}
 }
 
