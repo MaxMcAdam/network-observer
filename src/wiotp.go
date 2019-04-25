@@ -18,8 +18,8 @@ func newAlert(wg *sync.WaitGroup, alertType string, alertDevice string, wiotpenv
 
 	cmdFunction := "mosquitto_pub"
 	alertString := "{" + strconv.Quote("alerttype") + ":" + strconv.Quote(alertType) + "," + strconv.Quote("alertdevice") + ":" + strconv.Quote(alertDevice) + "}"
-	fmt.Println(cmdFunction, "-h", wiotpenv[0]+".messaging.internetoftings.ibmcloud.com", "-p", "8883", "-i", "d:"+wiotpenv[0]+":"+wiotpenv[1]+":"+wiotpenv[2], "-u", "use-token-auth", "-P", wiotpenv[3], "--capath", "/etc/ssl/certs", "-t", "iot-2/evt/status/fmt/json", "-m", alertString, "-d")
-	cmd := exec.Command(cmdFunction, "-h", wiotpenv[0]+".messaging.internetoftings.ibmcloud.com", "-p", "8883", "-i", "d:"+wiotpenv[0]+":"+wiotpenv[1]+":"+wiotpenv[2], "-u", "use-token-auth", "-P", wiotpenv[3], "--capath", "/etc/ssl/certs", "-t", "iot-2/evt/status/fmt/json", "-m", alertString, "-d")
+	fmt.Println(cmdFunction, "-h", wiotpenv[0]+".messaging.internetofthings.ibmcloud.com", "-p", "8883", "-i", "d:"+wiotpenv[0]+":"+wiotpenv[1]+":"+wiotpenv[2], "-u", "use-token-auth", "-P", wiotpenv[3], "--capath", "/etc/ssl/certs", "-t", "iot-2/evt/status/fmt/json", "-m", alertString, "-d")
+	cmd := exec.Command(cmdFunction, "-h", wiotpenv[0]+".messaging.internetofthings.ibmcloud.com", "-p", "8883", "-i", "d:"+wiotpenv[0]+":"+wiotpenv[1]+":"+wiotpenv[2], "-u", "use-token-auth", "-P", wiotpenv[3], "--capath", "/etc/ssl/certs", "-t", "iot-2/evt/status/fmt/json", "-m", alertString, "-d")
 
 	mosqPubOutput, err := cmd.CombinedOutput()
 	if err != nil {
