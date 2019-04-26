@@ -7,5 +7,4 @@ COPY scan.xml /
 COPY servenv /
 
 WORKDIR /
-CMD source servenv
-CMD go run *.go $COUCHDB_URL $WIOTP_ORG $WIOTP_DEVICE_TYPE $WIOTP_DEVICE_ID $WIOTP_DEVICE_TOKEN $MOCK
+CMD sh /start.sh
