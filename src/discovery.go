@@ -27,7 +27,7 @@ func getNetwork() string {
 				addrParts := strings.Split(address.String(), "/")
 				netAddr := addrParts[0]
 				subnet := addrParts[1]
-				if netAddr != "127.0.0.1" && netAddr != "::1" && subnet != "64" {
+				if netAddr != "127.0.0.1" && netAddr != "::1" && subnet != "64" && subnet != "16" {
 					network = address.String()
 				}
 			}
