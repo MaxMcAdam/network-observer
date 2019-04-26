@@ -37,11 +37,6 @@ func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url
 	if err != nil {
 		return err
 	}
-	cmd := exec.Command("./sync.sh")
-	err = cmd.Run()
-	if err != nil {
-		fmt.Println("Error syncing with disk db", err)
-	}
 	return nil
 }
 
@@ -58,5 +53,21 @@ func updateCheckin(docToRev Doc, checkIn int, url string) {
 	err := cmd.Run()
 	if err != nil {
 		fmt.Println(err)
+	}
+}
+
+func syncDB(direction int) {
+	if direction == 1 {
+		cmd := exec.Command("./sync.sh")
+		err := cmd.Run()
+		if err != nil {
+			fmt.Println("Error syncing with disk db", err)
+		}
+	} else {
+		cmd := exec.Command("./revsync.sh")
+		err := cmd.Run()
+		if err != nil {
+			fmt.Println("Error syncing with disk db", err)
+		}
 	}
 }

@@ -19,6 +19,7 @@ import (
 
 func main() {
 	url := "http://admin:p4ssw0rd@127.0.0.1:5984/"
+
 	if len(os.Args) > 1 {
 		url = os.Args[1]
 	}
@@ -44,6 +45,8 @@ func main() {
 	addr := getNetwork()
 
 	missingDB(url)
+
+	syncDB(0)
 
 	for true {
 		for i := 0; i < 1; i++ {

@@ -98,6 +98,7 @@ func findChanges(liveHosts []Host, dbURL string, checkIn int, wiotpenv [4]string
 				}
 			}
 			wg.Wait()
+			syncDB(1)
 		}
 	}
 }
@@ -146,6 +147,7 @@ func findDroppedHosts(baseURL string, currentCheckin int, wiotpenv [4]string) {
 			if err != nil {
 				fmt.Println(err)
 			}
+			syncDB(1)
 		}
 	}
 }
