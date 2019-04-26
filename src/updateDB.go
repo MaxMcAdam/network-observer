@@ -37,6 +37,11 @@ func addHostToLiveHosts(host Host, hostAuthorized bool, hostPersistent bool, url
 	if err != nil {
 		return err
 	}
+	cmd := exec.Command("./sync.sh")
+	err = cmd.Run()
+	if err != nil {
+		fmt.Println("Error syncing with disk db", err)
+	}
 	return nil
 }
 

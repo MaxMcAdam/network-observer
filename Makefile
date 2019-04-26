@@ -8,7 +8,7 @@ dev:
 	docker run --net=host -it $(DOCKER_USER)/$(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION) /bin/sh
 
 run:
-	docker run -d --env-file wiotpenv --net=host $(DOCKER_USER)/$(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION)
+	docker run -d --env-file servenv --net=host $(DOCKER_USER)/$(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION) --name $(SERVICE_NAME)
 
 publish-service:
 	hzn exchange service publish -f horizon/service.definition.json -k $(HZN_PRIVATE_KEY_FILE) -K $(HZN_PUBLIC_KEY_FILE)
