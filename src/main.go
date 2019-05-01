@@ -3,13 +3,13 @@ package main
 import (
 	_ "bufio"
 	"encoding/json"
-	"encoding/xml"
+	_ "encoding/xml"
 	"fmt"
 	_ "io"
 	"io/ioutil"
 	_ "net"
 	_ "net/http"
-	"os"
+	_ "os"
 	_ "os/exec"
 	"strconv"
 	_ "strings"
@@ -19,11 +19,11 @@ import (
 
 func main() {
 	userVars := getUserVars()
-	wiotpenv := [4]string{userVars.wiotpOrg, userVars.wiotpDeviceType, userVars.wiotpDeviceID, userVars.wiotpDeviceToken}
-	urlRam := "https://" + userVars.dbAdminUser + userVars.dbAdminPWstring + "@" + userVars.dbURL + ":" + "5984"
-	urlDisk := "https://" + userVars.dbAdminUser + userVars.dbAdminPWstring + "@" + userVars.dbURL + ":" + "5985"
-	pauseLength, err := strconv.ParseInt(userVars.pauseBetweenNmapS, 0, 64)
-	pausesBeforeSync, _ := strconv.ParseInt(userVars.pausesBeforeSync, 0, 64)
+	wiotpenv := [4]string{userVars.WiotpOrg, userVars.WiotpDeviceType, userVars.WiotpDeviceID, userVars.WiotpDeviceToken}
+	urlRam := "https://" + userVars.DbAdminUser + userVars.DbAdminPWstring + "@" + userVars.DbURL + ":" + "5984"
+	urlDisk := "https://" + userVars.DbAdminUser + userVars.DbAdminPWstring + "@" + userVars.DbURL + ":" + "5985"
+	pauseLength, _ := strconv.ParseInt(userVars.PauseBetweenNmapS, 0, 64)
+	pausesBeforeSync, _ := strconv.ParseInt(userVars.PausesBeforeSync, 0, 64)
 
 	checkIn := 0
 

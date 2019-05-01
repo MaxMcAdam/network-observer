@@ -83,13 +83,13 @@ type AllDocsRow struct {
 }
 
 type InitVars struct {
-	wiotpDeviceToken  string `json:"WIOTP_DEVICE_TOKEN"`
-	wiotpDeviceID     string `json:"WIOTP_DEVICE_ID"`
-	wiotpDeviceType   string `json:"WIOTP_DEVICE_TYPE"`
-	wiotpOrg          string `json:"WIOTP_ORG"`
-	dbURL             string `json:"DB_URL"`
-	dbAdminUser       string `json:"DB_ADMIN_USERNAME"`
-	dbAdminPWstring   string `json:"DB_ADMIN_PW"`
-	pauseBetweenNmapS string `json:"PAUSE_BETWEEN_NMAP_S"`
-	pausesBeforeSync  string `json:"PAUSES_BEFORE_SYNC"`
+	WiotpDeviceToken  string `json:"WIOTP_DEVICE_TOKEN"`
+	WiotpDeviceID     string `json:"WIOTP_DEVICE_ID"`
+	WiotpDeviceType   string `json:"WIOTP_DEVICE_TYPE"`
+	WiotpOrg          string `json:"WIOTP_ORG"`
+	DbURL             string `json:"DB_URL"`
+	DbAdminUser       string `json:"DB_ADMIN_USERNAME"`
+	DbAdminPWstring   string `json:"DB_ADMIN_PW"`
+	PauseBetweenNmapS string `json:"PAUSE_BETWEEN_NMAP_S"`
+	PausesBeforeSync  string `json:"PAUSES_BEFORE_SYNC"`
 }
