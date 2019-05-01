@@ -20,8 +20,8 @@ import (
 func main() {
 	userVars := getUserVars()
 	wiotpenv := [4]string{userVars.WiotpOrg, userVars.WiotpDeviceType, userVars.WiotpDeviceID, userVars.WiotpDeviceToken}
-	urlRam := "https://" + userVars.DbAdminUser + userVars.DbAdminPWstring + "@" + userVars.DbURL + ":" + "5984"
-	urlDisk := "https://" + userVars.DbAdminUser + userVars.DbAdminPWstring + "@" + userVars.DbURL + ":" + "5985"
+	urlRam := "https://" + userVars.DbAdminUser + userVars.DbAdminPWstring + "@" + userVars.DbURL + ":" + "5984" + "/"
+	urlDisk := "https://" + userVars.DbAdminUser + userVars.DbAdminPWstring + "@" + userVars.DbURL + ":" + "5985" + "/"
 	pauseLength, _ := strconv.ParseInt(userVars.PauseBetweenNmapS, 0, 64)
 	pausesBeforeSync, _ := strconv.ParseInt(userVars.PausesBeforeSync, 0, 64)
 
@@ -32,7 +32,7 @@ func main() {
 	if checkDBConn(urlDisk) {
 		syncDB(0)
 	} else {
-		initDB()
+		initDB(urlRam)
 	}
 
 	for true {

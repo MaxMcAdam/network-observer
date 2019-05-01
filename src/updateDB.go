@@ -72,10 +72,13 @@ func syncDB(direction int) {
 	}
 }
 
-func initDB() {
-	cmd := exec.Command("./db-init.sh")
-	err := cmd.Run()
-	if err != nil {
-		fmt.Println("Error creating the databases", err)
+func initDB(url string) {
+	reqDBs := []string{"_users", "_replicator", "_global_changes", "auth-hosts", "live-hosts"}
+	for _, db := range reqDBs {
+		cmd := exec.Command("curl", "-X", "PUT", url+db)
+		err := cmd.Run()
+		if err != nil {
+			fmt.Println("Error creating the databases", err)
+		}
 	}
 }
