@@ -12,6 +12,26 @@
           "version": "$SERVICE_VERSION"
         }
       ]
+    },
+    {
+      "serviceUrl": "couchdb_dual",
+      "serviceOrgid": "$HZN_ORG_ID",
+      "serviceArch": "amd64",
+      "serviceVersions": [
+        {
+          "version": "$SERVICE_VERSION"
+        }
+      ]
+    },
+    {
+      "serviceUrl": "network-observer-flask-app",
+      "serviceOrgid": "$HZN_ORG_ID",
+      "serviceArch": "amd64",
+      "serviceVersions": [
+        {
+          "version": "$SERVICE_VERSION"
+        }
+      ]
     }
   ]
 }

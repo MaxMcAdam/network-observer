@@ -71,3 +71,11 @@ func syncDB(direction int) {
 		}
 	}
 }
+
+func initDB() {
+	cmd := exec.Command("./db-init.sh")
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println("Error creating the databases")
+	}
+}

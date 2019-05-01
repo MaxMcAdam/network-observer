@@ -18,10 +18,13 @@ HEADERS="Content-Type: application/json"
 URL="http://${USER}:${PASSWORD}@${ADDRESS}:${SOURCE_PORT}/_replicate"
 #echo "${URL}"
 
+if [ $1 == 1] then
 # Source to target:
-#echo "curl -sS -v -X POST -H '${HEADERS}' -d '${STT_DATA}' ${URL}"
-#curl -sS -v -X POST -H "${HEADERS}" -d "${STT_DATA}" ${URL}
+echo "curl -sS -v -X POST -H '${HEADERS}' -d '${STT_DATA}' ${URL}"
+curl -sS -v -X POST -H "${HEADERS}" -d "${STT_DATA}" ${URL}
 
+else
 # Target to source:
 echo "curl -sS -v -X POST -H '${HEADERS}' -d '${TTS_DATA}' ${URL}"
 curl -sS -v -X POST -H "${HEADERS}" -d "${TTS_DATA}" ${URL}
+fi

@@ -5,7 +5,11 @@
 			"url": "network-observer",
 			"versionRange": "[0.0.0,INFINITY)",
 			"variables": {
-					"TEST_VARIABLE": "test variable"
+					"WIOTP_DEVICE_TOKEN": $WIOTP_DEVICE_TOKEN,
+					"WIOTP_DEVICE_ID": $WIOTP_DEVICE_ID,
+					"WIOTP_DEVICE_TYPE": $WIOTP_DEVICE_TYPE,
+					"WIOTP_ORG": $WIOTP_ORG
+
 			}
 		}
 	]

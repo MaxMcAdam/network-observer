@@ -2,7 +2,7 @@ package main
 
 import (
 	_ "bufio"
-	_ "encoding/json"
+	"encoding/json"
 	"encoding/xml"
 	"fmt"
 	_ "io"
@@ -18,66 +18,43 @@ import (
 )
 
 func main() {
-	url := "http://admin:p4ssw0rd@127.0.0.1:5984/"
-
-	if len(os.Args) > 1 {
-		url = os.Args[1]
-	}
-
-	wiotpenv := [4]string{"", "", "", ""}
-	if len(os.Args) > 5 {
-		wiotpenv = [4]string{os.Args[2], os.Args[3], os.Args[4], os.Args[5]}
-	} else {
-		fmt.Println("Missing Watsion IoT Platform variables")
-	}
-
-	mock := false
-	var err error
-	if len(os.Args) > 6 {
-		mock, err = strconv.ParseBool(os.Args[6])
-	}
-	if err != nil {
-		mock = false
-	}
+	userVars := getUserVars()
+	wiotpenv := [4]string{userVars.wiotpOrg, userVars.wiotpDeviceType, userVars.wiotpDeviceID, userVars.wiotpDeviceToken}
+	urlRam := "https://" + userVars.dbAdminUser + userVars.dbAdminPWstring + "@" + userVars.dbURL + ":" + "5984"
+	urlDisk := "https://" + userVars.dbAdminUser + userVars.dbAdminPWstring + "@" + userVars.dbURL + ":" + "5985"
+	pauseLength, err := strconv.ParseInt(userVars.pauseBetweenNmapS, 0, 64)
+	pausesBeforeSync, _ := strconv.ParseInt(userVars.pausesBeforeSync, 0, 64)
 
 	checkIn := 0
 
 	addr := getNetwork()
 
-	missingDB(url)
-
-	syncDB(0)
+	if checkDBConn(urlDisk) {
+		syncDB(0)
+	} else {
+		initDB()
+	}
 
 	for true {
-		for i := 0; i < 1; i++ {
+		for i := 0; i < int(pausesBeforeSync); i++ {
 			var wg sync.WaitGroup
 			var hostList []Host
-			if mock {
-				xmlFile, err := os.Open("./scan.xml")
-				if err != nil {
-					fmt.Println(err)
-				}
-				byteValue, _ := ioutil.ReadAll(xmlFile)
-				var scan NmapRun
-				xml.Unmarshal(byteValue, &scan)
-				defer xmlFile.Close()
-				hostList = scan.Hosts
-			} else {
-				wg.Add(1)
-				if addr[0:1] == ":" || addr[1:2] == ":" || addr[2:3] == ":" || addr[3:4] == ":" || addr[4:5] == ":" || addr[5:6] == ":" {
-					hostList = append(parseNmap(discovery(&wg, string(addr), true)))
-				} else {
-					hostList = append(parseNmap(discovery(&wg, string(addr), false)))
-				}
-				wg.Wait()
-			}
 
-			findChanges(hostList, url, checkIn, wiotpenv)
+			wg.Add(1)
+			if addr[0:1] == ":" || addr[1:2] == ":" || addr[2:3] == ":" || addr[3:4] == ":" || addr[4:5] == ":" || addr[5:6] == ":" {
+				hostList = append(parseNmap(discovery(&wg, string(addr), true)))
+			} else {
+				hostList = append(parseNmap(discovery(&wg, string(addr), false)))
+			}
+			wg.Wait()
+
+			findChanges(hostList, urlRam, checkIn, wiotpenv)
 			checkIn++
-			time.Sleep(15 * time.Second)
-			missingDB(url)
+			time.Sleep(time.Duration(pauseLength) * time.Second)
+
+			missingDB(urlRam)
 		}
-		findDroppedHosts(url, checkIn, wiotpenv)
+		syncDB(1)
 	}
 }
 
@@ -86,4 +63,14 @@ func missingDB(url string) {
 		time.Sleep(5 * time.Second)
 		fmt.Println("DB not found")
 	}
+}
+
+func getUserVars() InitVars {
+	userVarsJSON, err := ioutil.ReadFile("service-vars.json")
+	if err != nil {
+		fmt.Println("Error reading user variables", err)
+	}
+	var userVars InitVars
+	json.Unmarshal(userVarsJSON, &userVars)
+	return userVars
 }

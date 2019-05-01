@@ -10,24 +10,48 @@
   "sharable": "multiple",
   "requiredServices": [
     {
-      "url": "couchdbdual",
+      "url": "couchdb_dual",
+      "org": "Maxwell.McAdam@ibm.com",
+      "version": "0.0.1",
+      "arch": "amd64"
+    },
+    {
+      "url": "network-observer-flask-app",
       "org": "Maxwell.McAdam@ibm.com",
       "version": "0.0.1",
       "arch": "amd64"
     }
   ],
   "userInput": [
-      {
-        "name": "TEST_VARIABLE",
-        "label": "Are variables required",
-        "type": "string",
-        "defaultValue": ""
-      }
+    {
+          "name": "WIOTP_DEVICE_TOKEN",
+          "label": "The Device token created in the Watson IoT Platform to use in sending MQTT data",
+          "type": "string",
+          "defaultValue": ""
+    },
+    {
+          "name": "WIOTP_DEVICE_ID",
+          "label": "The Device id created in the Watson IoT Platform to use in sending MQTT data",
+          "type": "string",
+          "defaultValue": ""
+    },
+    {
+          "name": "WIOTP_DEVICE_TYPE",
+          "label": "The Device type created in the Watson IoT Platform to use in sending MQTT data",
+          "type": "string",
+          "defaultValue": ""
+    },
+    {
+          "name": "WIOTP_ORG",
+          "label": "The org assigned by Watson IoT Platform to use in sending MQTT data",
+          "type": "string",
+          "defaultValue": ""
+    }
   ],
   "deployment": {
       "services": {
           "$SERVICE_NAME": {
-              "image": "maxwellmcadam/${DOCKER_IMAGE_BASE}_$ARCH:$SERVICE_VERSION"
+              "image": "$DOCKER_USER/${DOCKER_IMAGE_BASE}_$ARCH:$SERVICE_VERSION"
           }
       }
   }
