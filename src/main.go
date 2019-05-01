@@ -66,7 +66,7 @@ func missingDB(url string) {
 }
 
 func getUserVars() InitVars {
-	userVarsJSON, err := ioutil.ReadFile("service-vars.json")
+	userVarsJSON, err := ioutil.ReadFile("/home/edgenode/Documents/network-observer/src/service-vars.json")
 	if err != nil {
 		fmt.Println("Error reading user variables", err)
 	}

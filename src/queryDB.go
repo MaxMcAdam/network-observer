@@ -103,6 +103,7 @@ func checkDBConn(url string) bool {
 func allTargetsInSlice(targets []string, searchSlice []string) bool {
 	for _, target := range targets {
 		if !targetInSlice(target, searchSlice) {
+			fmt.Println(target)
 			return false
 		}
 	}

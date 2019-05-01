@@ -58,13 +58,13 @@ func updateCheckin(docToRev Doc, checkIn int, url string) {
 
 func syncDB(direction int) {
 	if direction == 1 {
-		cmd := exec.Command("./sync.sh")
+		cmd := exec.Command("/home/edgenode/Documents/network-observer/src/sync.sh", "0")
 		err := cmd.Run()
 		if err != nil {
 			fmt.Println("Error syncing with disk db", err)
 		}
 	} else {
-		cmd := exec.Command("./revsync.sh")
+		cmd := exec.Command("/home/edgenode/Documents/network-observer/src/sync.sh", "0")
 		err := cmd.Run()
 		if err != nil {
 			fmt.Println("Error syncing with disk db", err)
@@ -76,6 +76,6 @@ func initDB() {
 	cmd := exec.Command("./db-init.sh")
 	err := cmd.Run()
 	if err != nil {
-		fmt.Println("Error creating the databases")
+		fmt.Println("Error creating the databases", err)
 	}
 }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ADDRESS='192.168.123.3'
+ADDRESS='127.0.0.1'
 SOURCE_PORT=5984
 TARGET_PORT=5985
 USER="admin"
@@ -18,7 +18,7 @@ HEADERS="Content-Type: application/json"
 URL="http://${USER}:${PASSWORD}@${ADDRESS}:${SOURCE_PORT}/_replicate"
 #echo "${URL}"
 
-if [ $1 == 1] then
+if [ $1 == 1 ]; then
 # Source to target:
 echo "curl -sS -v -X POST -H '${HEADERS}' -d '${STT_DATA}' ${URL}"
 curl -sS -v -X POST -H "${HEADERS}" -d "${STT_DATA}" ${URL}
