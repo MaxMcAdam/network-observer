@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "encoding/json"
 	"encoding/xml"
 )
 
@@ -92,4 +91,5 @@ type InitVars struct {
 	DbAdminPWstring   string `json:"DB_ADMIN_PW"`
 	PauseBetweenNmapS string `json:"PAUSE_BETWEEN_NMAP_S"`
 	PausesBeforeSync  string `json:"PAUSES_BEFORE_SYNC"`
+	LanNetwork        string `json:"LAN_NETWORK"`
 }

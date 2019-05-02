@@ -4,7 +4,7 @@ RUN apk add nmap net-tools curl mosquitto-clients
 
 COPY src/ /
 
-COPY servenv /
+COPY src/service-vars.json /
 
 WORKDIR /
-CMD sh /start.sh
+CMD go run *.go

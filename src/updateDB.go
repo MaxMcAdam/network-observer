@@ -1,19 +1,12 @@
 package main
 
 import (
-	_ "bufio"
 	"bytes"
 	"encoding/json"
-	_ "encoding/xml"
 	"fmt"
-	_ "io"
-	_ "io/ioutil"
-	_ "net"
 	"net/http"
-	_ "os"
 	"os/exec"
 	"strconv"
-	_ "sync"
 	"time"
 )
 
@@ -56,26 +49,20 @@ func updateCheckin(docToRev Doc, checkIn int, url string) {
 	}
 }
 
-func syncDB(direction int) {
-	if direction == 1 {
-		cmd := exec.Command("/home/edgenode/Documents/network-observer/src/sync.sh", "0")
-		err := cmd.Run()
-		if err != nil {
-			fmt.Println("Error syncing with disk db", err)
-		}
-	} else {
-		cmd := exec.Command("/home/edgenode/Documents/network-observer/src/sync.sh", "0")
-		err := cmd.Run()
-		if err != nil {
-			fmt.Println("Error syncing with disk db", err)
-		}
+func syncDB(sourceURL string, targetURL string) {
+	jsonStr := map[string]string{"source": sourceURL, "target": targetURL}
+	jsonValue, _ := json.Marshal(jsonStr)
+	_, err := http.Post(targetURL+"_replicate", "application/json", bytes.NewBuffer(jsonValue))
+	if err != nil {
+		fmt.Println("Error syncing DB's: ", err)
 	}
 }
 
 func initDB(url string) {
 	reqDBs := []string{"_users", "_replicator", "_global_changes", "auth-hosts", "live-hosts"}
 	for _, db := range reqDBs {
-		cmd := exec.Command("curl", "-X", "PUT", url+db)
+		fmt.Println("curl", "-X", "PUT", url+db, "-H", "Content-Type:application/json")
+		cmd := exec.Command("curl", "-X", "PUT", url+db, "-H", "Content-Type:application/json")
 		err := cmd.Run()
 		if err != nil {
 			fmt.Println("Error creating the databases", err)

@@ -1,19 +1,11 @@
 package main
 
 import (
-	_ "bufio"
 	"bytes"
 	"encoding/json"
-	_ "encoding/xml"
 	"fmt"
-	_ "io"
 	"io/ioutil"
-	_ "net"
 	"net/http"
-	_ "os"
-	_ "os/exec"
-	_ "sync"
-	_ "time"
 )
 
 func queryAuthorizedUsers(host Host, url string) (bool, bool) {

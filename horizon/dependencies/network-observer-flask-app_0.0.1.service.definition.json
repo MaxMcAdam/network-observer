@@ -1,0 +1,23 @@
+{
+    "org": "Maxwell.McAdam@ibm.com",
+    "label": "network-observer-flask-app for amd64",
+    "description": "A application for user input in a network monitoring service",
+    "public": true,
+    "documentation": "",
+    "url": "network-observer-flask-app",
+    "version": "0.0.1",
+    "arch": "amd64",
+    "sharable": "multiple",
+    "matchHardware": {},
+    "requiredServices": [],
+    "userInput": [],
+    "deployment": {
+        "services": {
+            "network-observer-flask-app": {
+                "image": "maxwellmcadam/network-observer-flask-app_amd64@sha256:dd692fe53ad3353c4fc1dca07dbd1e32a9a7a9384f5d36955140cee753b9a6cc"
+            }
+        }
+    },
+    "deploymentSignature": "",
+    "imageStore": {}
+}

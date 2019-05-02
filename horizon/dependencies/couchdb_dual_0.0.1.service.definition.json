@@ -1,0 +1,30 @@
+{
+    "org": "Maxwell.McAdam@ibm.com",
+    "label": "couchdb_dual for amd64",
+    "description": "A network monitoring service",
+    "public": true,
+    "documentation": "",
+    "url": "couchdb_dual",
+    "version": "0.0.1",
+    "arch": "amd64",
+    "sharable": "multiple",
+    "matchHardware": {},
+    "requiredServices": [],
+    "userInput": [
+        {
+            "name": "",
+            "label": "",
+            "type": "",
+            "defaultValue": ""
+        }
+    ],
+    "deployment": {
+        "services": {
+            "couchdb_dual": {
+                "image": "maxwellmcadam/couchdb_dual_amd64@sha256:570f903ec99e9e0ab1e7d8ab2da83bb02eedb07f96612668afedb23855935ea1"
+            }
+        }
+    },
+    "deploymentSignature": "",
+    "imageStore": {}
+}

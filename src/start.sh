@@ -1,4 +1,0 @@
-#!/usr/bin/sh
-
-source servenv
-go run *.go $COUCHDB_URL $WIOTP_ORG $WIOTP_DEVICE_TYPE $WIOTP_DEVICE_ID $WIOTP_DEVICE_TOKEN $MOCK

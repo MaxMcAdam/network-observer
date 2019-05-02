@@ -1,58 +1,107 @@
 {
-  "org": "$HZN_ORG_ID",
-  "label": "$SERVICE_NAME for $ARCH",
-  "description": "A network monitoring service",
-  "public": true,
-  "documentation": "",
-  "url": "$SERVICE_NAME",
-  "version": "$SERVICE_VERSION",
-  "arch": "$ARCH",
-  "sharable": "multiple",
-  "requiredServices": [
-    {
-      "url": "couchdb_dual",
-      "org": "Maxwell.McAdam@ibm.com",
-      "version": "0.0.1",
-      "arch": "amd64"
+    "org": "$HZN_ORG_ID",
+    "label": "$SERVICE_NAME for $ARCH",
+    "description": "A network monitoring service",
+    "public": true,
+    "documentation": "",
+    "url": "$SERVICE_NAME",
+    "version": "$SERVICE_VERSION",
+    "arch": "$ARCH",
+    "sharable": "multiple",
+    "matchHardware": null,
+    "requiredServices": [
+        {
+            "url": "couchdb_dual",
+            "org": "Maxwell.McAdam@ibm.com",
+            "version": "0.0.1",
+            "arch": "amd64"
+        },
+        {
+            "url": "network-observer-flask-app",
+            "org": "Maxwell.McAdam@ibm.com",
+            "version": "0.0.1",
+            "arch": "amd64"
+        }
+    ],
+    "userInput": [
+        {
+            "name": "WIOTP_DEVICE_TOKEN",
+            "label": "The Device token created in the Watson IoT Platform to use in sending MQTT data",
+            "type": "string",
+            "defaultValue": ""
+        },
+        {
+            "name": "WIOTP_DEVICE_ID",
+            "label": "The Device id created in the Watson IoT Platform to use in sending MQTT data",
+            "type": "string",
+            "defaultValue": ""
+        },
+        {
+            "name": "WIOTP_DEVICE_TYPE",
+            "label": "The Device type created in the Watson IoT Platform to use in sending MQTT data",
+            "type": "string",
+            "defaultValue": ""
+        },
+        {
+            "name": "WIOTP_ORG",
+            "label": "The org assigned by Watson IoT Platform to use in sending MQTT data",
+            "type": "string",
+            "defaultValue": ""
+        },
+        {
+            "name": "DB_URL",
+            "label": "Base URL for the couchdb databases",
+            "type": "string",
+            "defaultValue": ""
+        },
+        {
+            "name": "DB_ADMIN_USERNAME",
+            "label": "The database administrator username",
+            "type": "string",
+            "defaultValue": ""
+        },
+        {
+            "name": "DB_ADMIN_PW",
+            "label": "The database administrator password",
+            "type": "string",
+            "defaultValue": ""
+        },
+        {
+            "name": "PAUSE_BETWEEN_NMAP_S",
+            "label": "Seconds to wait in between network scans",
+            "type": "string",
+            "defaultValue": "15"
+        },
+        {
+            "name": "PAUSES_BEFORE_SYNC",
+            "label": "The number of pauses of the above length before the ram database syncs to disk",
+            "type": "string",
+            "defaultValue": "8"
+        },
+        {
+            "name": "LAN_NETWORK",
+            "label": "The org assigned by Watson IoT Platform to use in sending MQTT data",
+            "type": "string",
+            "defaultValue": ""
+        }
+    ],
+    "deployment": {
+        "services": {
+            "$SERVICE_NAME": {
+                "environment": [
+                    "WIOTP_ORG=$WIOTP_ORG",
+                    "WIOTP_DEVICE_ID=$WIOTP_DEVICE_ID",
+                    "WIOTP_DEVICE_TYPE=$WIOTP_DEVICE_TYPE",
+                    "WIOTP_DEVICE_TOKEN=$WIOTP_DEVICE_TOKEN",
+                    "DB_ADMIN_PW=$DB_ADMIN_USERNAME",
+                    "PAUSE_BETWEEN_NMAP_S=$PAUSE_BETWEEN_NMAP_S",
+                    "PAUSES_BEFORE_SYNC=$PAUSES_BEFORE_SYNC",
+                    "LAN_NETWORK=$LAN_NETWORK"
+                ],
+                "image": "$DOCKER_USER/${DOCKER_IMAGE_BASE}_$ARCH:$SERVICE_VERSION"
+            }
+        }
     },
-    {
-      "url": "network-observer-flask-app",
-      "org": "Maxwell.McAdam@ibm.com",
-      "version": "0.0.1",
-      "arch": "amd64"
-    }
-  ],
-  "userInput": [
-    {
-          "name": "WIOTP_DEVICE_TOKEN",
-          "label": "The Device token created in the Watson IoT Platform to use in sending MQTT data",
-          "type": "string",
-          "defaultValue": ""
-    },
-    {
-          "name": "WIOTP_DEVICE_ID",
-          "label": "The Device id created in the Watson IoT Platform to use in sending MQTT data",
-          "type": "string",
-          "defaultValue": ""
-    },
-    {
-          "name": "WIOTP_DEVICE_TYPE",
-          "label": "The Device type created in the Watson IoT Platform to use in sending MQTT data",
-          "type": "string",
-          "defaultValue": ""
-    },
-    {
-          "name": "WIOTP_ORG",
-          "label": "The org assigned by Watson IoT Platform to use in sending MQTT data",
-          "type": "string",
-          "defaultValue": ""
-    }
-  ],
-  "deployment": {
-      "services": {
-          "$SERVICE_NAME": {
-              "image": "$DOCKER_USER/${DOCKER_IMAGE_BASE}_$ARCH:$SERVICE_VERSION"
-          }
-      }
-  }
+    "deploymentSignature": "",
+    "imageStore": null
 }

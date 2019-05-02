@@ -1,21 +1,15 @@
 package main
 
 import (
-	_ "bufio"
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	_ "io"
 	"io/ioutil"
 	"net"
-	_ "net"
 	"net/http"
-	_ "os"
 	"os/exec"
-	_ "strconv"
 	"strings"
 	"sync"
-	_ "time"
 )
 
 func getNetwork() string {

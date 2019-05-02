@@ -1,16 +1,29 @@
 {
-	"services": [
-		{
-			"org": "Maxwell.McAdam@ibm.com",
-			"url": "network-observer",
-			"versionRange": "[0.0.0,INFINITY)",
-			"variables": {
-					"WIOTP_DEVICE_TOKEN": $WIOTP_DEVICE_TOKEN,
-					"WIOTP_DEVICE_ID": $WIOTP_DEVICE_ID,
-					"WIOTP_DEVICE_TYPE": $WIOTP_DEVICE_TYPE,
-					"WIOTP_ORG": $WIOTP_ORG
-
-			}
-		}
-	]
+    "services": [
+        {
+            "org": "Maxwell.McAdam@ibm.com",
+            "url": "network-observer",
+            "versionRange": "[0.0.0,INFINITY)",
+            "variables": {
+                "DB_ADMIN_PW": "p4ssw0rd",
+                "DB_ADMIN_USERNAME": "admin",
+                "DB_URL": "127.0.0.1",
+                "LAN_NETWORK": "",
+                "PAUSES_BEFORE_SYNC": "8",
+                "PAUSE_BETWEEN_NMAP_S": "15",
+                "WIOTP_DEVICE_ID": "$WIOTP_DEVICE_ID",
+                "WIOTP_DEVICE_TOKEN": "$WIOTP_DEVICE_TOKEN",
+                "WIOTP_DEVICE_TYPE": "$WIOTP_DEVICE_TYPE",
+                "WIOTP_ORG": "$WIOTP_ORG"
+            }
+        },
+        {
+            "org": "Maxwell.McAdam@ibm.com",
+            "url": "couchdb_dual",
+            "versionRange": "0.0.1",
+            "variables": {
+                "": ""
+            }
+        }
+    ]
 }
